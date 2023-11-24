@@ -99,7 +99,7 @@ def setup_logger(cfg: DictConfig, model: LightningModule) -> Logger:
         cfg.logger.name = pathlib_cwd.parent.name + "/" + pathlib_cwd.name
         cfg.logger.id = cfg.logger.name.replace("/", "_")
         train_logger = hydra.utils.instantiate(cfg.logger)
-        train_logger.watch(model)
+        train_logger.watch(model, log_graph=False)
     else:
         train_logger = hydra.utils.instantiate(cfg.logger)
     return train_logger

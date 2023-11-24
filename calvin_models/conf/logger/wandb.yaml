@@ -3,5 +3,5 @@ save_dir: .
 name: play_lmp
 group: play_lmp
 log_model: false
-project: "multi_play"
+project: "CALVIN_IL"
 id: ???

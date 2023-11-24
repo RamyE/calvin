@@ -144,3 +144,9 @@ calvin_venv/*
 
 # Ignore datasets as downloaded according to instructions
 dataset/*
+wandb/*
+
+# Ignore Ramy specific files
+notes.txt
+training_logs.txt
+egl_ids.txt
