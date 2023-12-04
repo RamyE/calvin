@@ -17,8 +17,10 @@ from calvin_env.utils.utils import set_egl_device, get_egl_device_ids
 import torch
 from pathlib import Path
 
-STORAGE_CAVIN_PATH = "/home/uoft/gv0/ramy/calvin"
+STORAGE_CAVIN_PATH = "/mnt/vol1/ramy/calvin"
 os.environ['WANDB_DIR'] = str(Path(STORAGE_CAVIN_PATH) / "wandb")
+
+TASK_NAME = "lift_pink_block_table" # "move_slider_left" # "turn_on_led"
 
 def flatten_dict(d, parent_key='', sep='_'):
     items = []
@@ -74,9 +76,9 @@ class SlideEnv(PlayTableSimEnv):
     def _success(self):
         """ Returns a boolean indicating if the task was performed correctly """
         current_info = self.get_info()
-        task_filter = ["move_slider_left"]
+        task_filter = [TASK_NAME]
         task_info = self.tasks.get_task_info_for_set(self.start_info, current_info, task_filter)
-        return 'move_slider_left' in task_info
+        return TASK_NAME in task_info
 
     def _reward(self):
         """ Returns the reward function that will be used 
@@ -203,7 +205,6 @@ def train():
             for line in f:
                 cuda_id, egl_id = line.strip().split(":")
                 egl_ids[int(cuda_id)] = int(egl_id)
-    # egl_ids = {3: 0, 2: 1, 1: 2, 0: 3, 7: 4, 6: 5, 5: 6, 4: 7}
     print(egl_ids)
 
     def make_env(rank):
@@ -224,7 +225,7 @@ def train():
         return _init
 
     # Number of parallel environments
-    num_envs = 7 #256  # Number of environments
+    num_envs = 256 # Number of environments
     num_gpus = 7  # Number of GPUs available, we don't use GPU 0 because it is mostly used by the RL algorithm
 
     env = SubprocVecEnv([make_env(i) for i in range(num_envs)])
@@ -244,7 +245,7 @@ def train():
                 verbose=2,
                 buffer_size=100_000,
                 batch_size=1024,
-                learning_starts=1000, # 16_000,
+                learning_starts=16_000,
                 train_freq=8,
                 gradient_steps=8,
                 top_quantiles_to_drop_per_net=5,
