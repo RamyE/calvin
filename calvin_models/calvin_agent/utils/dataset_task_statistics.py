@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 def count_tasks(batch, env, tasks, task_counter):
-    state_obs, rgb_obs, depth_obs, actions, _, reset_info, idx = batch
+    state_obs, rgb_obs, depth_obs, decomp_obs, actions, _, reset_info, idx = batch
     batch_size = state_obs.shape[0]
     for i in range(batch_size):
         # reset env to state of last step in the episode (goal state)

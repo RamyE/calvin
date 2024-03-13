@@ -1,0 +1,77 @@
+python training.py +trainer.gpus=7 datamodule.root_data_dir=/home/uoft/gv0/ramy/calvin/dataset/task_D_D datamodule/datasets=vision_lang_shm datamodule/observation_space=lang_rgb_static_abs_act
+python training.py datamodule.root_data_dir=/mnt/vol1/ramy/calvin/dataset/task_D_D datamodule/datasets=vision_lang_shm datamodule/observation_space=lang_rgb_static_abs_act
+python training.py +trainer.gpus=8 datamodule.root_data_dir=/mnt/vol1/ramy/calvin/dataset/task_D_D datamodule/datasets=vision_lang datamodule/observation_space=lang_rgb_static_abs_act
+
+
+python training.py +trainer.devices=[1,2,3,4] datamodule.root_data_dir=/mnt/vol1/ramy/calvin/dataset/task_D_D datamodule/datasets=vision_lang_shm datamodule/observation_space=lang_rgb_static_abs_act hydra.run.dir=/mnt/vol1/ramy/calvin/runs/2023-11-30/19-51-35/
+
+python evaluation/evaluate_policy_singlestep.py --dataset_path /mnt/vol1/ramy/calvin/dataset/task_D_D --checkpoint /home/uoft/ramy/calvin/pretrained/D_D_static_rgb_baseline
+
+
+python evaluation/evaluate_policy_singlestep.py --dataset_path /mnt/vol1/ramy/calvin/dataset/task_D_D --train_folder /home/uoft/ramy/calvin/pretrained/D_D_static_rgb_baseline/ --checkpoint /home/uoft/ramy/calvin/pretrained/D_D_static_rgb_baseline/mcil_baseline.ckpt  --neutral_init --wandb
+
+
+nohup python training.py +trainer.gpus=2 datamodule.root_data_dir=/mnt/vol1/ramy/calvin/dataset/task_D_D datamodule/datasets=vision_lang_shm datamodule/observation_space=lang_rgb_static_abs_act hydra.run.dir=/mnt/vol1/ramy/calvin/runs/2023-12-04/17-37-56/ &
+
+python evaluation/evaluate_policy_singlestep.py --dataset_path /mnt/vol1/ramy/calvin/dataset/task_D_D --train_folder /home/uoft/ramy/calvin/pretrained/D_D_static_rgb_baseline/ --checkpoint /home/uoft/ramy/calvin/pretrained/D_D_static_rgb_baseline/mcil_baseline.ckpt  --neutral_init
+python evaluation/evaluate_policy_singlestep.py --dataset_path /mnt/vol1/ramy/calvin/dataset/task_D_D --train_folder /mnt/vol1/ramy/calvin/runs/2023-12-04/17-37-56-backup --neutral_init --wandb
+python evaluation/evaluate_policy_singlestep.py --dataset_path /mnt/vol1/ramy/calvin/dataset/task_D_D --train_folder /mnt/vol1/ramy/calvin/runs/2023-12-04/17-37-56 --neutral_init
+
+nohup python training.py +trainer.gpus=2 datamodule.root_data_dir=/mnt/vol1/ramy/calvin/dataset/task_D_D datamodule/datasets=vision_lang_shm datamodule/observation_space=lang_rgbd_static_robot_abs_act model/perceptual_encoder=static_RGBD &
+
+nohup python training.py +trainer.gpus=2 datamodule.root_data_dir=/mnt/vol1/ramy/calvin/dataset/task_D_D datamodule/datasets=vision_lang_shm datamodule/observation_space=lang_rgb_static_abs_act +model.plan_recognition.lstm=True &
+
+
+For an additional speed up, you can disable the evaluation callbacks during training by adding ~callbacks/rollout and ~callbacks/rollout_lh
+
+For SERVER 3:
+nohup python training.py +trainer.gpus=4 datamodule.root_data_dir=/mnt/vol1/ramy/calvin/dataset/task_D_D datamodule/datasets=vision_lang_shm datamodule/observation_space=lang_rgbd_static_robot_abs_act model/perceptual_encoder=static_RGBD &
+
+FOr server 2:
+nohup python training.py +trainer.devices=[1,2,3,4] datamodule.root_data_dir=/mnt/vol1/ramy/calvin/dataset/task_D_D datamodule/datasets=vision_lang_shm datamodule/observation_space=lang_rgb_static_abs_act ~callbacks/rollout_lh ~callbacks/rollout &
+nohup python training.py +trainer.devices=[1,2,3,4] datamodule.root_data_dir=/mnt/vol1/ramy/calvin/dataset/task_D_D datamodule/datasets=vision_lang datamodule/observation_space=lang_rgb_static_abs_act ~callbacks/rollout_lh ~callbacks/rollout  &
+nohup python training.py trainer.devices=-1 datamodule.root_data_dir=/dev/shm/task_D_D datamodule/datasets=vision_lang datamodule/observation_space=lang_rgb_static_abs_act ~callbacks/rollout_lh ~callbacks/rollout +model.plan_recognition.lstm=True hydra.run.dir=/mnt/vol1/ramy/calvin/runs/2023-12-11/17-50-24 &
+nohup python training.py trainer.devices=[1,2,3,4] datamodule.root_data_dir=/dev/shm/task_D_D datamodule/datasets=vision_lang datamodule/observation_space=lang_rgb_static_abs_act trainer.max_epochs=110 +model.plan_recognition.lstm=True hydra.run.dir=/mnt/vol1/ramy/calvin/runs/2023-12-11/17-50-24 &
+python evaluation/evaluate_policy_singlestep.py --dataset_path /mnt/vol1/ramy/calvin/dataset/task_D_D --train_folder /mnt/vol1/ramy/calvin/runs/2023-12-11/17-50-24  --neutral_init --wandb
+
+
+
+
+nohup python training.py +trainer.gpus=4 datamodule.root_data_dir=/mnt/vol1/ramy/calvin/dataset/task_D_D_new datamodule/datasets=vision_lang_shm datamodule/observation_space=lang_rgb_seg_static_robot_abs_act model/perceptual_encoder=static_RGBD +model.plan_recognition.lstm=True ~callbacks/rollout_lh &
+
+python training.py +trainer.gpus=4 datamodule.root_data_dir=/mnt/vol1/ramy/calvin/dataset/task_D_D_new datamodule/datasets=vision_lang datamodule/observation_space=lang_rgb_seg_static_robot_abs_act model/perceptual_encoder=static_RGBD +model.plan_recognition.lstm=True ~callbacks/rollout_lh
+python training.py +trainer.gpus=1 datamodule.root_data_dir=/mnt/vol1/ramy/calvin/dataset/task_D_D_new datamodule/datasets=vision_lang datamodule/observation_space=lang_rgb_seg_static_robot_abs_act model/perceptual_encoder=static_RGBD +model.plan_recognition.lstm=True ~callbacks/rollout_lh
+
+
+# without segmentation - language only
+nohup python training.py +trainer.gpus=8 datamodule.root_data_dir=/dev/shm/task_D_D_new datamodule/datasets=lang_only datamodule/observation_space=lang_rgb_static_abs_act +model.plan_recognition.lstm=True ~callbacks/rollout_lh ~callbacks/tsne_plot &
+
+# with segmentation - language only
+nohup python training.py +trainer.gpus=8 datamodule.root_data_dir=/dev/shm/task_D_D_new datamodule/datasets=lang_only datamodule/observation_space=lang_rgb_seg_static_robot_abs_act model/perceptual_encoder=static_RGBD +model.plan_recognition.lstm=True ~callbacks/rollout_lh  ~callbacks/tsne_plot &
+
+# segmentation only - language only
+nohup python training.py +trainer.gpus=8 datamodule.root_data_dir=/dev/shm/task_D_D_new datamodule/datasets=lang_only datamodule/datasets=lang_only datamodule/observation_space=lang_rgb_seg_static_robot_abs_act model/perceptual_encoder=static_seg_only +model.plan_recognition.lstm=True ~callbacks/rollout_lh  ~callbacks/tsne_plot &
+
+# segmentation and RGB data - langauge only
+nohup python training.py +trainer.gpus=8 datamodule.root_data_dir=/dev/shm/task_D_D_new datamodule/datasets=lang_only datamodule/datasets=lang_only datamodule/observation_space=lang_rgb_seg_static_robot_abs_act model/perceptual_encoder=static_RGB_seg +model.plan_recognition.lstm=True ~callbacks/rollout_lh  ~callbacks/tsne_plot &
+
+
+# debug only
+python training.py +trainer.gpus=1 datamodule.root_data_dir=/mnt/vol1/ramy/calvin/dataset/calvin_debug_dataset_new2 datamodule/datasets=lang_only datamodule/observation_space=lang_seg_static_robot_abs_act model/perceptual_encoder=static_seg_only +model.plan_recognition.lstm=True ~callbacks/rollout_lh  ~callbacks/tsne_plot
+python training.py +trainer.gpus=1 datamodule.root_data_dir=/mnt/vol1/ramy/calvin/dataset/calvin_debug_dataset_new2 datamodule/datasets=lang_only datamodule/observation_space=lang_rgb_seg_static_robot_abs_act model/perceptual_encoder=static_seg_only +model.plan_recognition.lstm=True ~callbacks/rollout_lh  ~callbacks/tsne_plot
+
+
+python training.py +trainer.gpus=1 datamodule.root_data_dir=/mnt/vol1/ramy/calvin/dataset/calvin_debug_dataset_new2 datamodule/datasets=lang_only datamodule/observation_space=lang_rgb_seg_static_robot_abs_act model/perceptual_encoder=static_RGB_seg +model.plan_recognition.lstm=True ~callbacks/rollout_lh  ~callbacks/tsne_plot
+
+
+# for debugging use the small dataset and use one gpu only
+python training.py +trainer.gpus=1 datamodule.root_data_dir=/mnt/vol1/ramy/calvin/dataset/calvin_debug_dataset_new2 datamodule/datasets=lang_only datamodule/observation_space=lang_rgb_seg_static_robot_abs_act model/perceptual_encoder=static_seg_only ~callbacks/rollout_lh  ~callbacks/tsne_plot model=simple_model model.action_decoder.plan_features=0 datamodule.datasets.lang_dataset.lang_folder=lang_paraphrase-MiniLM-L3-v2 callbacks.rollout.neutral_init=True
+
+# regular use
+nohup python training.py +trainer.gpus=8 datamodule.root_data_dir=/dev/shm/task_D_D_new datamodule/datasets=lang_only datamodule/observation_space=lang_rgb_seg_static_robot_abs_act model/perceptual_encoder=static_seg_only ~callbacks/rollout_lh  ~callbacks/tsne_plot model=simple_model model.action_decoder.plan_features=0 datamodule.datasets.lang_dataset.lang_folder=lang_clip_resnet50 model.language_goal.language_features=1024 callbacks.rollout.num_rollouts_per_task=50 &
+
+# use with one hot encoding
+nohup python training.py +trainer.gpus=8 datamodule.root_data_dir=/dev/shm/task_D_D_new datamodule/datasets=lang_only datamodule/observation_space=lang_rgb_seg_static_robot_abs_act model/perceptual_encoder=static_seg_only ~callbacks/rollout_lh  ~callbacks/tsne_plot model=simple_model model.action_decoder.plan_features=0 datamodule.datasets.lang_dataset.lang_folder=lang_one_hot model.language_goal.language_features=34 callbacks.rollout.ep_len=200 callbacks.rollout.num_rollouts_per_task=25 callbacks.rollout.neutral_init=True &
+
+# without segmentation
+nohup python training.py +trainer.gpus=8 datamodule.root_data_dir=/dev/shm/task_D_D_new2 datamodule/datasets=lang_only datamodule/observation_space=lang_rgb_static_abs_act  ~callbacks/rollout_lh ~callbacks/tsne_plot model=simple_model model.action_decoder.plan_features=0 datamodule.datasets.lang_dataset.lang_folder=lang_one_hot model.language_goal.language_features=34 callbacks.rollout.ep_len=200 callbacks.rollout.num_rollouts_per_task=25 callbacks.rollout.neutral_init=True &

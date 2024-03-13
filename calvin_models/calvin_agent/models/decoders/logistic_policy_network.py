@@ -195,7 +195,10 @@ class LogisticPolicyNetwork(ActionDecoder):
         h_0: Optional[torch.Tensor] = None,
     ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
         batch_size, seq_len = perceptual_emb.shape[0], perceptual_emb.shape[1]
-        latent_plan = latent_plan.unsqueeze(1).expand(-1, seq_len, -1) if latent_plan.nelement() > 0 else latent_plan
+        if latent_plan is None:
+            latent_plan = torch.zeros(batch_size, seq_len, self.plan_features, device=perceptual_emb.device)
+        else:
+            latent_plan = latent_plan.unsqueeze(1).expand(-1, seq_len, -1) if latent_plan.nelement() > 0 else latent_plan
         latent_goal = latent_goal.unsqueeze(1).expand(-1, seq_len, -1)
         x = torch.cat([latent_plan, perceptual_emb, latent_goal], dim=-1)  # b, s, (plan + visuo-propio + goal)
         self.rnn.flatten_parameters()

@@ -9,6 +9,7 @@ from calvin_agent.datasets.utils.episode_utils import (
     process_language,
     process_rgb,
     process_state,
+    process_decomp,
 )
 import numpy as np
 from omegaconf import DictConfig
@@ -136,11 +137,12 @@ class BaseDataset(Dataset):
         seq_state_obs = process_state(episode, self.observation_space, self.transforms, self.proprio_state)
         seq_rgb_obs = process_rgb(episode, self.observation_space, self.transforms)
         seq_depth_obs = process_depth(episode, self.observation_space, self.transforms)
+        seq_decomp_obs = process_decomp(episode, self.observation_space, self.transforms)
         seq_acts = process_actions(episode, self.observation_space, self.transforms)
         info = get_state_info_dict(episode)
         seq_lang = process_language(episode, self.transforms, self.with_lang)
         info = self._add_language_info(info, idx)
-        seq_dict = {**seq_state_obs, **seq_rgb_obs, **seq_depth_obs, **seq_acts, **info, **seq_lang}  # type:ignore
+        seq_dict = {**seq_state_obs, **seq_rgb_obs, **seq_depth_obs, **seq_decomp_obs, **seq_acts, **info, **seq_lang}  # type:ignore
         seq_dict["idx"] = idx  # type:ignore
 
         return seq_dict
@@ -213,6 +215,7 @@ class BaseDataset(Dataset):
         seq.update({"robot_obs": self._pad_with_repetition(seq["robot_obs"], pad_size)})
         seq.update({"rgb_obs": {k: self._pad_with_repetition(v, pad_size) for k, v in seq["rgb_obs"].items()}})
         seq.update({"depth_obs": {k: self._pad_with_repetition(v, pad_size) for k, v in seq["depth_obs"].items()}})
+        seq.update({"decomp_obs": {k: self._pad_with_repetition(v, pad_size) for k, v in seq["decomp_obs"].items()}})
         #  todo: find better way of distinguishing rk and play action spaces
         if not self.relative_actions:
             # repeat action for world coordinates action space

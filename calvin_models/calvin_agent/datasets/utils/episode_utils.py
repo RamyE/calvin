@@ -117,6 +117,34 @@ def process_depth(
     # shape: N_depth_obs x(BxHxW)
     return {"depth_obs": seq_depth_obs_dict}
 
+def process_decomp(
+    episode: Dict[str, np.ndarray],
+    observation_space: DictConfig,
+    transforms: Dict,
+    seq_idx: int = 0,
+    window_size: int = 0,
+) -> Dict[str, Dict[str, torch.Tensor]]:
+    # expand dims for single environment obs
+    def exp_dim(decomp_img):
+        if len(decomp_img.shape) != 3:
+            decomp_img = np.expand_dims(decomp_img, axis=0)
+        return decomp_img
+
+    decomp_obs_keys = observation_space["decomp_obs"]
+    seq_decomp_obs_dict = {}
+    for _, decomp_obs_key in enumerate(decomp_obs_keys):
+        decomp_ob = exp_dim(episode[decomp_obs_key])
+        assert len(decomp_ob.shape) == 3
+        if window_size == 0 and seq_idx == 0:  # single file loader
+            decomp_ob_ = torch.from_numpy(decomp_ob).float()
+        else:  # episode loader
+            decomp_ob_ = torch.from_numpy(decomp_ob[seq_idx : seq_idx + window_size]).float()
+        # we might have different transformations for the different cameras
+        if decomp_obs_key in transforms:
+            decomp_ob_ = transforms[decomp_obs_key](decomp_ob_)
+        seq_decomp_obs_dict[decomp_obs_key] = decomp_ob_
+    # shape: N_decomp_obs x(BxHxW)
+    return {"decomp_obs": seq_decomp_obs_dict}
 
 def process_actions(
     episode: Dict[str, np.ndarray],

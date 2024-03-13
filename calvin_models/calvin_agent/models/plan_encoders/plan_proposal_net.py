@@ -38,14 +38,25 @@ class PlanProposalNetwork(nn.Module):
         self.variance_fc = nn.Linear(in_features=2048, out_features=self.plan_features)  # shape: [N, 2048]
 
     def forward(self, initial_percep_emb: torch.Tensor, latent_goal: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
+        # if any NaN in perceptual_emb, print the whole perceptual_emb here without truncation
+        if torch.isnan(initial_percep_emb).any():
+            print("PP initial_percep_emb", initial_percep_emb)
         x = torch.cat([initial_percep_emb, latent_goal], dim=-1)
         x = self.fc_model(x)
+        # if any NaN in x, print the whole x here without truncation
+        if torch.isnan(x).any():
+            print("PP X", x)
         mean = self.mean_fc(x)
         var = self.variance_fc(x)
         std = F.softplus(var) + self.min_std
         return mean, std  # shape: [N, 256]
 
     def __call__(self, *args, **kwargs):
-        mean, std = super().__call__(*args, **kwargs)
+        mean, std = super().__call__(*args, **kwargs)        
+        # convert all nan values in mean to 0
+        # mean[torch.isnan(mean)] = 0.0
+        # convert all 0 values in std to 1
+        # std[torch.isnan(std)] = 1
+        # std[std <= 1e-8] = 1
         pp_dist = Independent(Normal(mean, std), 1)
         return pp_dist

@@ -41,12 +41,24 @@ def sequences_for_rank(num_sequences):
     When using ddp, determine how many sequences every process should evaluate.
     """
     rank = dist.get_rank()
+    # print(f"Rank {rank} evaluating {num_sequences} sequences")
     ws = dist.get_world_size()
+    # print("World size: ", ws)
     num_seq_per_gpu = divide_across_ranks(num_sequences, ws, rank)
+    # print(f"num_seq_per_gpu: {num_seq_per_gpu}")
     num_workers = multiprocessing.cpu_count() // ws
+    # print(f"num_workers: {num_workers}")
+    seqs = get_sequences(num_sequences, num_workers=num_workers)
+
+    # def print_sizes(nested_list):
+    #     print(len(nested_list))
+    #     for element in nested_list:
+    #         if isinstance(element, list):
+    #             print_sizes(element)
+    # print_sizes(seqs)
     return [
         seq.tolist()
-        for seq in np.array_split(get_sequences(num_sequences, num_workers=num_workers), ws)[rank][:num_seq_per_gpu]
+        for seq in np.array_split(seqs, ws)[rank][:num_seq_per_gpu]
     ]
 
 

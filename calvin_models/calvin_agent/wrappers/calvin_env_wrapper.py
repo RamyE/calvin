@@ -2,10 +2,11 @@ import logging
 import os
 from typing import Any, Dict, Tuple, Union
 
-from calvin_agent.datasets.utils.episode_utils import process_depth, process_rgb, process_state
+from calvin_agent.datasets.utils.episode_utils import process_depth, process_rgb, process_state, process_decomp
 import gym
 import numpy as np
 import torch
+import copy
 
 from calvin_env.envs.play_table_env import get_env
 from calvin_env.utils.utils import EglDeviceNotFoundError, get_egl_device_id
@@ -45,18 +46,26 @@ class CalvinEnvWrapper(gym.Wrapper):
         logger.info(f"EGL_DEVICE_ID {egl_id} <==> CUDA_DEVICE_ID {cuda_id}")
 
     def transform_observation(self, obs: Dict[str, Any]) -> Dict[str, Union[torch.Tensor, Dict[str, torch.Tensor]]]:
+        
+        # # HACK: We need access to rgb_static for video recording, but it may not be part of the observation space so we will just make it part of it here
+        # observation_space_keys = copy.deepcopy(self.observation_space_keys)
+        # if "rgb_static" not in observation_space_keys["rgb_obs"]:
+        #     observation_space_keys["rgb_obs"].append("rgb_static")
         state_obs = process_state(obs, self.observation_space_keys, self.transforms, self.proprio_state)
         rgb_obs = process_rgb(obs["rgb_obs"], self.observation_space_keys, self.transforms)
         depth_obs = process_depth(obs["depth_obs"], self.observation_space_keys, self.transforms)
-
+        decomp_obs = process_decomp(obs["decomp_obs"], self.observation_space_keys, self.transforms)
+        
         state_obs["robot_obs"] = state_obs["robot_obs"].to(self.device).unsqueeze(0)
         rgb_obs.update({"rgb_obs": {k: v.to(self.device).unsqueeze(0) for k, v in rgb_obs["rgb_obs"].items()}})
         depth_obs.update({"depth_obs": {k: v.to(self.device).unsqueeze(0) for k, v in depth_obs["depth_obs"].items()}})
+        decomp_obs.update({"decomp_obs": {k: v.to(self.device).unsqueeze(0) for k, v in decomp_obs["decomp_obs"].items()}})
 
         obs_dict: Dict = {
             **rgb_obs,
             **state_obs,
             **depth_obs,
+            **decomp_obs,
             "robot_obs_raw": torch.from_numpy(obs["robot_obs"]).to(self.device),
         }
         return obs_dict

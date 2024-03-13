@@ -58,6 +58,9 @@ train:
     - _target_: calvin_agent.utils.transforms.AddGaussianNoise
       mean: [ 0.0 ]
       std: [ 0.01 ]
+  seg_static:
+    - _target_: torchvision.transforms.Resize
+      size: 200
   robot_obs:
     - _target_: calvin_agent.utils.transforms.NormalizeVector
     - _target_: calvin_agent.utils.transforms.AddGaussianNoise
@@ -105,6 +108,9 @@ val:
     - _target_: torchvision.transforms.Normalize
       mean: [0.1,]
       std: [0.2,]
+  seg_static:
+    - _target_: torchvision.transforms.Resize
+      size: 200
   robot_obs:
     - _target_: calvin_agent.utils.transforms.NormalizeVector
   scene_obs:

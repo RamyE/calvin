@@ -94,3 +94,89 @@ class SpatialSoftmax(nn.Module):
         expected_xy = torch.cat((expected_x, expected_y), 1)
         self.coords = expected_xy.view(-1, c * 2)
         return self.coords  # batch, C*2
+
+
+class VisionNetworkLarge(nn.Module):
+    # reference: https://arxiv.org/pdf/2005.07648.pdf
+    def __init__(
+        self,
+        input_width: int,
+        input_height: int,
+        activation_function: str,
+        dropout_vis_fc: float,
+        l2_normalize_output: bool,
+        visual_features: int,
+        num_c: int,
+    ):
+        super(VisionNetworkLarge, self).__init__()
+        self.l2_normalize_output = l2_normalize_output
+        self.act_fn = getattr(nn, activation_function)()
+        # w,h,kernel_size,padding,stride
+        w, h = self.calc_out_size(input_width, input_height, 4, 0, 2)
+        w, h = self.calc_out_size(w, h, 4, 0, 2)
+        w, h = self.calc_out_size(w, h, 4, 0, 2)
+        w, h = self.calc_out_size(w, h, 4, 0, 1)
+        w, h = self.calc_out_size(w, h, 3, 0, 1)
+        self.spatial_softmax = SpatialSoftmax(num_rows=w, num_cols=h, temperature=1.0)
+        print("w, h: ", w, h)
+        # model
+        self.conv_model = nn.Sequential(
+            # input shape: [N, C, 200, 200]
+            nn.Conv2d(in_channels=num_c, out_channels=128, kernel_size=4, stride=2),  # shape: [N, 32, 49, 49]
+            self.act_fn,
+            nn.Conv2d(in_channels=128, out_channels=128, kernel_size=4, stride=2),  # shape: [N, 32, 49, 49]
+            self.act_fn,
+            nn.Conv2d(in_channels=128, out_channels=128, kernel_size=4, stride=2),  # shape: [N, 32, 49, 49]
+            self.act_fn,
+            nn.Conv2d(in_channels=128, out_channels=128, kernel_size=4, stride=1),  # shape: [N, 64, 23, 23]
+            self.act_fn,
+            nn.Conv2d(in_channels=128, out_channels=128, kernel_size=3, stride=1),  # shape: [N, 64, 21, 21]
+            self.act_fn,
+        )
+        self.fc1 = nn.Sequential(
+            nn.Linear(in_features=256, out_features=512), self.act_fn, nn.Dropout(dropout_vis_fc)
+        )  # shape: [N, 256]
+        self.fc2 = nn.Sequential(
+            nn.Linear(in_features=512, out_features=1024), self.act_fn, nn.Dropout(dropout_vis_fc)
+        )  # shape: [N, 512]
+        self.fc3 = nn.Linear(in_features=1024, out_features=visual_features)  # shape: [N, out_features]
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        x = self.conv_model(x)
+        x = self.spatial_softmax(x)
+        x = self.fc1(x)
+        x = self.fc2(x)
+        x = self.fc3(x)
+        if self.l2_normalize_output:
+            x = F.normalize(x, p=2, dim=1)
+        return x  # shape: [N, 64]
+
+    @staticmethod
+    def calc_out_size(w: int, h: int, kernel_size: int, padding: int, stride: int) -> Tuple[int, int]:
+        width = (w - kernel_size + 2 * padding) // stride + 1
+        height = (h - kernel_size + 2 * padding) // stride + 1
+        return width, height
+
+
+if __name__ == "__main__":
+    # test VisionNetworkLarge
+    input_width = 200
+    input_height = 200
+    activation_function = "ReLU"
+    dropout_vis_fc = 0.5
+    l2_normalize_output = True
+    visual_features = 64
+    num_c = 1
+    batch_size = 32
+    sequence_length = 10
+    vision_network_large = VisionNetworkLarge(
+        input_width, input_height, activation_function, dropout_vis_fc, l2_normalize_output, visual_features, num_c
+    )
+    print(vision_network_large)
+    x = torch.randn(batch_size, num_c, input_width, input_height)
+    print("input shape: ", x.shape)
+    output = vision_network_large(x)
+    print("output shape: ", output.shape)
+    # calculate the number of parameters
+    num_params = sum(p.numel() for p in vision_network_large.parameters() if p.requires_grad)
+    print(num_params)

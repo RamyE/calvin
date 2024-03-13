@@ -1,5 +1,7 @@
 devices: 1
 accelerator: gpu
 precision: 16
-val_check_interval: 1.0
+check_val_every_n_epoch: 4
+# val_check_interval: 1.0
 max_epochs: 100
+# fast_dev_run: True

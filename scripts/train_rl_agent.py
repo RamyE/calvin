@@ -16,11 +16,15 @@ import os
 from calvin_env.utils.utils import set_egl_device, get_egl_device_ids
 import torch
 from pathlib import Path
+from calvin_agent.evaluation.multistep_sequences import get_sequences
+from calvin_agent.evaluation.utils import get_env_state_for_initial_condition
 
-STORAGE_CAVIN_PATH = "/mnt/vol1/ramy/calvin"
+import random
+
+STORAGE_CAVIN_PATH = "/home/uoft/ramy/calvin"
 os.environ['WANDB_DIR'] = str(Path(STORAGE_CAVIN_PATH) / "wandb")
 
-TASK_NAME = "lift_pink_block_table" # "move_slider_left" # "turn_on_led"
+TASK_NAME = "push_into_drawer" # "move_slider_left" # "turn_on_led"
 
 def flatten_dict(d, parent_key='', sep='_'):
     items = []
@@ -36,6 +40,7 @@ def flatten_dict(d, parent_key='', sep='_'):
 class SlideEnv(PlayTableSimEnv):
     def __init__(self,
                  tasks: dict = {},
+                 initial_states: list = [],
                  **kwargs):
         super(SlideEnv, self).__init__(**kwargs)
         # For this example we will modify the observation to
@@ -54,8 +59,11 @@ class SlideEnv(PlayTableSimEnv):
         # self.render_mode="human"
         self.render_mode="rgb_array"
 
+        self.initial_states = initial_states
+
     def reset(self, seed=None):
-        obs = super().reset()
+        robot_obs, scene_obs = get_env_state_for_initial_condition(random.choice(self.initial_states))
+        obs = super().reset(robot_obs=robot_obs, scene_obs=scene_obs)
         self.start_info = self.get_info()
         return obs, {}
 
@@ -185,6 +193,8 @@ def train():
             config=flatten_dict(OmegaConf.to_container(cfg, resolve=True))
     )
 
+    # add one more entry to wandb config for the task
+    wandb.config.task = TASK_NAME
 
     wandb_callback = WandbCallback(
         gradient_save_freq=1_000,
@@ -195,17 +205,32 @@ def train():
 
     # get all the egl_ids for each cuda_id if not saved and then save them in a local file
     if not os.path.exists("egl_ids.txt"):
+        print("Getting EGL IDs")
         egl_ids = get_egl_device_ids()
         with open("egl_ids.txt", "w") as f:
             for cuda_id, egl_id in egl_ids.items():
                 f.write(f"{cuda_id}:{egl_id}\n")
     else:
+        print("Loading EGL IDs")
         egl_ids = {}
         with open("egl_ids.txt", "r") as f:
             for line in f:
                 cuda_id, egl_id = line.strip().split(":")
                 egl_ids[int(cuda_id)] = int(egl_id)
     print(egl_ids)
+
+
+    # initialize a list of potential initial states for the task
+    # use the initial state when the first task in the sequence is equal to the task here
+    initial_states = []
+    count = 0
+    while len(initial_states) < 1 and count < 10:
+        proposed_seqs = get_sequences(num_sequences=1000, num_workers=1)
+        for proposed_seq in proposed_seqs:
+            if proposed_seq[1][0] == TASK_NAME:
+                initial_states.append(proposed_seq[0])
+        count += 1
+    assert len(initial_states) > 0, "No initial states found for the task"
 
     def make_env(rank):
         def _init():
@@ -218,10 +243,12 @@ def train():
             env_cfg["tasks"] = cfg.tasks
             env_cfg.pop('_target_', None)
             env_cfg.pop('_recursive_', None)
+            env_cfg["initial_states"] = initial_states
             env = SlideEnv(**env_cfg)
             env = TruncatedEnv(env, max_steps=250)
             env = Monitor(env)  # record stats such as returns
             return env
+
         return _init
 
     # Number of parallel environments
@@ -253,7 +280,7 @@ def train():
                 policy_kwargs=dict(net_arch=[256, 128]),
                 tensorboard_log=f"{STORAGE_CAVIN_PATH}/runs/{wandb.run.id}")
     # model.learn(total_timesteps=1000, log_interval=2, progress_bar=True, callback=[render_callback, checkpoint_callback, wandb_callback])
-    model.learn(total_timesteps=25_000_000, progress_bar=True, callback=[wandb_callback])
+    model.learn(total_timesteps=10_000_000, progress_bar=True, callback=[wandb_callback])
     # model.save(f"{wandb.run.id}Model")
     # env.save(f"{wandb.run.id}Env")
 

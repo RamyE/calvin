@@ -35,6 +35,7 @@ def rollout(
              state_obs: Tensor,
              rgb_obs: tuple(Tensor, ),
              depth_obs: tuple(Tensor, ),
+             decomp_obs: tuple(Tensor, ),
              actions: Tensor,
              lang: Tensor,
              reset_info: Dict
@@ -46,7 +47,7 @@ def rollout(
         visualize: visualize images
 
     """
-    state_obs, rgb_obs, depth_obs, actions, _, reset_info, idx = episode
+    state_obs, rgb_obs, depth_obs, decomp_obs, actions, _, reset_info, idx = episode
     seq_len_max = state_obs.shape[0] - 1
     for mod in modalities:
         groundtruth_task = id_to_task_dict[int(idx)]

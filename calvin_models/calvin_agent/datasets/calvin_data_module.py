@@ -43,7 +43,12 @@ class CalvinDataModule(pl.LightningDataModule):
         self.modalities: List[str] = []
         self.transforms = transforms
 
-        self.use_shm = "shm_dataset" in self.datasets_cfg.vision_dataset._target_
+        if vision_dataset := self.datasets_cfg.get("vision_dataset"):
+            self.use_shm = "shm_dataset" in vision_dataset._target_
+        elif lang_dataset := self.datasets_cfg.get("lang_dataset"):
+            self.use_shm = "shm_dataset" in lang_dataset._target_
+        
+        self.save_hyperparameters()
 
     def prepare_data(self, *args, **kwargs):
         # check if files already exist
@@ -110,6 +115,7 @@ class CalvinDataModule(pl.LightningDataModule):
                 batch_size=dataset.batch_size,
                 num_workers=dataset.num_workers,
                 pin_memory=False,
+                # persistent_workers=True,
             )
             for key, dataset in self.train_datasets.items()
         }
@@ -122,6 +128,7 @@ class CalvinDataModule(pl.LightningDataModule):
                 num_workers=dataset.num_workers,
                 pin_memory=False,
                 shuffle=self.shuffle_val,
+                # persistent_workers=True,
             )
             for key, dataset in self.val_datasets.items()
         }

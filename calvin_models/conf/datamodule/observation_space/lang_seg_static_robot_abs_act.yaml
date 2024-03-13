@@ -1,0 +1,6 @@
+rgb_obs: []
+depth_obs: []
+decomp_obs: ['seg_static']
+state_obs: ['robot_obs']
+actions: ['actions']
+language: ['language']

@@ -94,7 +94,10 @@ class SharedMemoryLoader:
     """
 
     def __init__(self, datasets_cfg: DictConfig, dataset_dir: Path):
-        self.obs_space = datasets_cfg.vision_dataset.obs_space
+        if vision_dataset := datasets_cfg.get("vision_dataset"):
+            self.obs_space = vision_dataset.obs_space
+        elif lang_dataset := datasets_cfg.get("lang_dataset"):
+            self.obs_space = lang_dataset.obs_space
         self.dataset_dir = dataset_dir
         self.dataset_type = "train" if "training" in dataset_dir.as_posix() else "val"
         self.lang_folder = datasets_cfg.lang_dataset.lang_folder
@@ -327,6 +330,8 @@ class SignalCallback(Callback):
     """
 
     def on_fit_start(self, trainer: Trainer, pl_module: LightningModule) -> None:
+        # print("To save time, we will not delete shared memory after training.")
+        # return
         if isinstance(trainer.datamodule.train_dataloader()["vis"].dataset, ShmDataset):  # type: ignore
             shm_keys = trainer.datamodule.train_dataloader()["vis"].dataset.episode_lookup_dict.keys()  # type: ignore
             signal.signal(signal.SIGTERM, partial(delete_shm, shm_keys))

@@ -11,6 +11,7 @@ import pytorch_lightning as pl
 from pytorch_lightning.utilities import rank_zero_only
 import torch
 import torch.distributions as D
+import traceback
 
 logger = logging.getLogger(__name__)
 
@@ -236,6 +237,9 @@ class MCIL(pl.LightningModule, CalvinBaseModel):
                     - 'depth_obs' (dict):
                         - 'depth_static' (Tensor): Depth camera image of depth camera
                         - ...
+                    - 'decomp_obs' (dict):
+                        - 'seg_static' (Tensor): Segmentation mask of static camera
+                        - ...
                     - 'robot_obs' (Tensor): Proprioceptive state observation.
                     - 'actions' (Tensor): Ground truth actions.
                     - 'state_info' (dict):
@@ -259,30 +263,47 @@ class MCIL(pl.LightningModule, CalvinBaseModel):
             torch.tensor(0.0).to(self.device),
         )
 
-        for self.modality_scope, dataset_batch in batch.items():
-            perceptual_emb = self.perceptual_encoder(
-                dataset_batch["rgb_obs"], dataset_batch["depth_obs"], dataset_batch["robot_obs"]
-            )
-            if "lang" in self.modality_scope:
-                latent_goal = self.language_goal(dataset_batch["lang"])
-            else:
-                latent_goal = self.visual_goal(perceptual_emb[:, -1])
-            kl, act_loss, mod_loss, pp_dist, pr_dist = self.lmp_train(
-                perceptual_emb, latent_goal, dataset_batch["actions"]
-            )
-            kl_loss += kl
-            action_loss += act_loss
-            total_loss += mod_loss
-            self.log(f"train/kl_loss_scaled_{self.modality_scope}", kl, on_step=False, on_epoch=True)
-            self.log(f"train/action_loss_{self.modality_scope}", act_loss, on_step=False, on_epoch=True)
-            self.log(f"train/total_loss_{self.modality_scope}", mod_loss, on_step=False, on_epoch=True)
-        total_loss = total_loss / len(batch)  # divide accumulated gradients by number of datasets
-        kl_loss = kl_loss / len(batch)
-        action_loss = action_loss / len(batch)
-        self.log("train/kl_loss", kl_loss, on_step=False, on_epoch=True)
-        self.log("train/action_loss", action_loss, on_step=False, on_epoch=True)
-        self.log("train/total_loss", total_loss, on_step=False, on_epoch=True)
-        return total_loss
+        try:
+            for self.modality_scope, dataset_batch in batch.items():
+                # check if there is any NaN values in the batch
+                if "rgb_static" in dataset_batch["rgb_obs"].keys() and torch.isnan(dataset_batch["rgb_obs"]["rgb_static"]).any():
+                    print("rgb_static", dataset_batch["rgb_obs"]["rgb_static"])
+                if torch.isnan(dataset_batch["robot_obs"]).any():
+                    print("robot_obs", dataset_batch["robot_obs"])
+                perceptual_emb = self.perceptual_encoder(
+                    dataset_batch["rgb_obs"], dataset_batch["depth_obs"], dataset_batch["decomp_obs"], dataset_batch["robot_obs"]
+                )
+                if "lang" in self.modality_scope:
+                    latent_goal = self.language_goal(dataset_batch["lang"])
+                else:
+                    latent_goal = self.visual_goal(perceptual_emb[:, -1])
+                try:
+                    kl, act_loss, mod_loss, pp_dist, pr_dist = self.lmp_train(
+                        perceptual_emb, latent_goal, dataset_batch["actions"]
+                    )
+                except ValueError as e:
+                    print(f"ValueError in lmp_train: {e} in batch_idx {batch_idx}")
+                    # print the whole traceback
+                    traceback.print_exc()
+                else:
+                    kl_loss += kl
+                    action_loss += act_loss
+                    total_loss += mod_loss
+                    self.log(f"train/kl_loss_scaled_{self.modality_scope}", kl, on_step=False, on_epoch=True)
+                    self.log(f"train/action_loss_{self.modality_scope}", act_loss, on_step=False, on_epoch=True)
+                    self.log(f"train/total_loss_{self.modality_scope}", mod_loss, on_step=False, on_epoch=True)
+            total_loss = total_loss / len(batch)  # divide accumulated gradients by number of datasets
+            kl_loss = kl_loss / len(batch)
+            action_loss = action_loss / len(batch)
+            self.log("train/kl_loss", kl_loss, on_step=False, on_epoch=True)
+            self.log("train/action_loss", action_loss, on_step=False, on_epoch=True)
+            self.log("train/total_loss", total_loss, on_step=False, on_epoch=True)
+            return total_loss
+        except ValueError as e:
+            print(f"ValueError in training step: {e} in batch_idx {batch_idx}") 
+            # print the whole traceback
+            traceback.print_exc()
+            return None
 
     def compute_kl_loss(
         self, pr_dist: torch.distributions.Distribution, pp_dist: torch.distributions.Distribution
@@ -318,6 +339,9 @@ class MCIL(pl.LightningModule, CalvinBaseModel):
                     - 'depth_obs' (dict):
                         - 'depth_static' (Tensor): Depth camera image of depth camera
                         - ...
+                    - 'decomp_obs' (dict):
+                        - 'seg_static' (Tensor): Segmentation mask of static camera
+                        - ...
                     - 'robot_obs' (Tensor): Proprioceptive state observation.
                     - 'actions' (Tensor): Ground truth actions.
                     - 'state_info' (dict):
@@ -337,7 +361,7 @@ class MCIL(pl.LightningModule, CalvinBaseModel):
         output = {}
         for self.modality_scope, dataset_batch in batch.items():
             perceptual_emb = self.perceptual_encoder(
-                dataset_batch["rgb_obs"], dataset_batch["depth_obs"], dataset_batch["robot_obs"]
+                dataset_batch["rgb_obs"], dataset_batch["depth_obs"], dataset_batch["decomp_obs"], dataset_batch["robot_obs"]
             )
             latent_goal = (
                 self.visual_goal(perceptual_emb[:, -1])
@@ -497,7 +521,7 @@ class MCIL(pl.LightningModule, CalvinBaseModel):
             Predicted action.
         """
         with torch.no_grad():
-            perceptual_emb = self.perceptual_encoder(obs["rgb_obs"], obs["depth_obs"], obs["robot_obs"])
+            perceptual_emb = self.perceptual_encoder(obs["rgb_obs"], obs["depth_obs"], obs["decomp_obs"], obs["robot_obs"])
             action = self.action_decoder.act(sampled_plan, perceptual_emb, latent_goal)
 
         return action
@@ -516,11 +540,13 @@ class MCIL(pl.LightningModule, CalvinBaseModel):
         """
         assert len(obs["rgb_obs"]) == len(goal["rgb_obs"])
         assert len(obs["depth_obs"]) == len(goal["depth_obs"])
+        assert len(obs["decomp_obs"]) == len(goal["decomp_obs"])
         imgs = {k: torch.cat([v, goal["rgb_obs"][k]], dim=1) for k, v in obs["rgb_obs"].items()}  # (1, 2, C, H, W)
         depth_imgs = {k: torch.cat([v, goal["depth_obs"][k]], dim=1) for k, v in obs["depth_obs"].items()}
+        decomp_imgs = {k: torch.cat([v, goal["decomp_obs"][k]], dim=1) for k, v in obs["decomp_obs"].items()}
         state = torch.cat([obs["robot_obs"], goal["robot_obs"]], dim=1)
         with torch.no_grad():
-            perceptual_emb = self.perceptual_encoder(imgs, depth_imgs, state)
+            perceptual_emb = self.perceptual_encoder(imgs, depth_imgs, decomp_imgs, state)
             latent_goal = self.visual_goal(perceptual_emb[:, -1])
             # ------------Plan Proposal------------ #
             pp_dist = self.plan_proposal(perceptual_emb[:, 0], latent_goal)
@@ -541,7 +567,7 @@ class MCIL(pl.LightningModule, CalvinBaseModel):
             latent_goal: Encoded language goal.
         """
         with torch.no_grad():
-            perceptual_emb = self.perceptual_encoder(obs["rgb_obs"], obs["depth_obs"], obs["robot_obs"])
+            perceptual_emb = self.perceptual_encoder(obs["rgb_obs"], obs["depth_obs"], obs["decomp_obs"], obs["robot_obs"])
             latent_goal = self.language_goal(goal)
             # ------------Plan Proposal------------ #
             pp_dist = self.plan_proposal(perceptual_emb[:, 0], latent_goal)

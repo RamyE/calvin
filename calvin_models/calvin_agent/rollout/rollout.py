@@ -12,6 +12,9 @@ import numpy as np
 from pytorch_lightning import Callback, LightningModule, Trainer
 import torch
 import torch.distributed as dist
+from calvin_agent.evaluation.multistep_sequences import get_sequences
+import random
+from calvin_agent.evaluation.utils import get_env_state_for_initial_condition
 
 log_print = logging.getLogger(__name__)
 
@@ -73,11 +76,13 @@ class Rollout(Callback):
         log_video_to_file,
         save_dir,
         add_goal_thumbnail,
-        min_window_size,
-        max_window_size,
         lang_folder,
         val_annotations,
+        datasets,
+        min_window_size = None,
+        max_window_size = None,
         id_selection_strategy="select_first",
+        neutral_init = False,
     ):
         self.env = None  # type: Any
         self.env_cfg = env_cfg
@@ -103,6 +108,15 @@ class Rollout(Callback):
         self.add_goal_thumbnail = add_goal_thumbnail
         self.val_annotations = val_annotations
         self.lang_folder = lang_folder
+        self.neutral_init = neutral_init
+        
+        if min_window_size is None or max_window_size is None:
+            if vision_dataset := datasets.get("vision_dataset"):
+                min_window_size = vision_dataset.min_window_size
+                max_window_size = vision_dataset.max_window_size
+            elif lang_dataset := datasets.get("lang_dataset"):
+                min_window_size = lang_dataset.min_window_size
+                max_window_size = lang_dataset.max_window_size
         self.pick_task_ids = partial(
             eval(id_selection_strategy), min_window_size=min_window_size, max_window_size=max_window_size
         )
@@ -112,7 +126,7 @@ class Rollout(Callback):
         if self.env is None:
             self.modalities = trainer.datamodule.modalities  # type: ignore
             self.device = pl_module.device
-            dataset = trainer.val_dataloaders[0].dataset.datasets["vis"]  # type: ignore
+            dataset = trainer.val_dataloaders[0].dataset.datasets[self.modalities[0]]  # type: ignore
             from calvin_agent.rollout.rollout_long_horizon import RolloutLongHorizon
 
             for callback in trainer.callbacks:
@@ -140,7 +154,7 @@ class Rollout(Callback):
         batch_idx: int,
         dataloader_idx: int,
     ) -> None:
-        batch = batch["vis"]
+        batch = batch[self.modalities[0]]
         if pl_module.current_epoch >= self.skip_epochs and (pl_module.current_epoch + 1) % self.rollout_freq == 0:
             # in first validation epoch collect groundtruth task information of current validation batch
             if self.task_to_id_dict is None:
@@ -172,6 +186,7 @@ class Rollout(Callback):
                         rollout_task_counter = torch.sum(
                             pl_module.all_gather(rollout_task_counter), dim=0
                         )  # shape: (num_tasks,)
+                    print("rollout_task_counter", rollout_task_counter)
                     score = (
                         torch.sum(rollout_task_counter) / torch.sum(self.groundtruth_task_counter)
                         if torch.sum(self.groundtruth_task_counter) > 0
@@ -249,6 +264,8 @@ class Rollout(Callback):
         n_tasks = self.num_rollouts_per_task
         for task_id in unique_task_ids:
             all_task_ids = batch_seq_ids[np.where(task_ids == task_id)[0]]
+            # repeat all_task_ids multiple times to have enough sequences from tasks with very few sequences
+            all_task_ids = np.tile(all_task_ids, n_tasks)
             self.task_to_id_dict[self.tasks.id_to_task[task_id]] = self.pick_task_ids(all_task_ids, n_tasks)
             self.full_task_to_id_dict[self.tasks.id_to_task[task_id]] = all_task_ids
         self.id_to_task_dict = defaultdict(set)
@@ -257,6 +274,10 @@ class Rollout(Callback):
             for i in v:
                 self.id_to_task_dict[i] |= {k}
             self.groundtruth_task_counter[self.tasks.task_to_id[k]] = len(v)
+            
+        # print("task_to_id_dict", self.task_to_id_dict)
+        # print("full_task_to_id_dict", self.full_task_to_id_dict)
+        # print("groundtruth_task_counter", self.groundtruth_task_counter)
 
     def env_rollouts(
         self,
@@ -283,6 +304,7 @@ class Rollout(Callback):
         state_obs = batch["robot_obs"]
         rgb_obs = batch["rgb_obs"]
         depth_obs = batch["depth_obs"]
+        decomp_obs = batch["decomp_obs"]
         reset_info = batch["state_info"]
         idx = batch["idx"]
         # create tensor of zeros to count number of successful tasks in
@@ -296,56 +318,74 @@ class Rollout(Callback):
                     # get set of task(s) that where originally performed. Use set because theoretically
                     # there can be more than one task solved in one sequence
                     groundtruth_task = self.id_to_task_dict[int(global_idx)]
-                    # reset env to state of first step in the episode
-                    obs = self.env.reset(reset_info, i, 0)
-                    start_info = self.env.get_info()
+                    
+                    # we will count how many times the int(global_idx) appears in the task_to_id_dict
+                    # this will be the number of rollouts we will perform for this sequence
+                    # global_idx may appear more than once in every list, we should count them all
+                    n_rollouts = sum([sum([int(global_idx) == i for i in v]) for v in self.task_to_id_dict.values()])
+                    for rollout_idx in range(n_rollouts):
+                        if mod == "lang":
+                            # language goal
+                            _task = np.random.choice(list(groundtruth_task))
+                            goal = self.val_annotations[_task][0]
+                            if self.neutral_init:
+                                neutral_reset_info = self.get_neutral_reset_info(_task)
+                        else:
+                            # goal image is last step of the episode
+                            goal = {
+                                "rgb_obs": {k: v[i, -1].unsqueeze(0).unsqueeze(0) for k, v in rgb_obs.items()},  # type: ignore
+                                "depth_obs": {k: v[i, -1].unsqueeze(0).unsqueeze(0) for k, v in depth_obs.items()},  # type: ignore
+                                "decomp_obs": {k: v[i, -1].unsqueeze(0).unsqueeze(0) for k, v in decomp_obs.items()},  # type: ignore
+                                "robot_obs": state_obs[i, -1].unsqueeze(0).unsqueeze(0),
+                            }
+                            if self.neutral_init:
+                                neutral_reset_info = self.get_neutral_reset_info(list(groundtruth_task)[0])
 
-                    if mod == "lang":
-                        # language goal
-                        _task = np.random.choice(list(groundtruth_task))
-                        goal = self.val_annotations[_task][0]
-                    else:
-                        # goal image is last step of the episode
-                        goal = {
-                            "rgb_obs": {k: v[i, -1].unsqueeze(0).unsqueeze(0) for k, v in rgb_obs.items()},  # type: ignore
-                            "depth_obs": {k: v[i, -1].unsqueeze(0).unsqueeze(0) for k, v in depth_obs.items()},  # type: ignore
-                            "robot_obs": state_obs[i, -1].unsqueeze(0).unsqueeze(0),
-                        }
 
-                    # only save video of first task execution per rollout
-                    record_video = self.video and np.any(
-                        np.asarray([int(global_idx) == self.task_to_id_dict[task][0] for task in groundtruth_task])
-                    )
-                    if record_video:
-                        self.rollout_video.new_video(tag=get_video_tag(groundtruth_task, mod))
-                    pl_module.reset()  # type: ignore
-                    success = False
-                    for step in range(self.ep_len):
-                        action = pl_module.step(obs, goal)  # type: ignore
-                        obs, _, _, current_info = self.env.step(action)
-                        if record_video:
-                            # update video
-                            self.rollout_video.update(obs["rgb_obs"]["rgb_static"])
-                        # check if current step solves a task
-                        current_task_info = self.tasks.get_task_info_for_set(start_info, current_info, groundtruth_task)
-                        # check if a task was achieved and if that task is a subset of the original tasks
-                        # we do not just want to solve any task, we want to solve the task that was proposed
-                        if len(current_task_info) > 0:
-                            for task in current_task_info:
-                                task_id = self.tasks.task_to_id[task]
-                                # count successful task rollouts
-                                rollout_task_counter[task_id] += 1
-                            # skip current sequence if task was achieved
-                            success = True
-                            break
-                    if record_video:
-                        if self.add_goal_thumbnail:
-                            if mod == "lang":
-                                self.rollout_video.add_language_instruction(goal)
+                        # reset env to state of first step in the episode
+                        if self.neutral_init:
+                            if neutral_reset_info[0] is not None and neutral_reset_info[1] is not None:
+                                obs = self.env.reset(robot_obs=neutral_reset_info[0], scene_obs=neutral_reset_info[1])
                             else:
-                                self.rollout_video.add_goal_thumbnail(rgb_obs["rgb_static"][i, -1])
-                        self.rollout_video.draw_outcome(success)
-                        self.rollout_video.write_to_tmp()
+                                obs = self.env.reset(reset_info, i, 0)
+                        else:
+                            obs = self.env.reset(reset_info, i, 0)
+                        start_info = self.env.get_info()
+
+                        # only save video of first task execution per rollout
+                        record_video = self.video and np.any(
+                            np.asarray([int(global_idx) == self.task_to_id_dict[task][0] for task in groundtruth_task])
+                        ) and rollout_idx == 0
+                        if record_video:
+                            self.rollout_video.new_video(tag=get_video_tag(groundtruth_task, mod))
+                        pl_module.reset()  # type: ignore
+                        success = False
+                        for step in range(self.ep_len):
+                            action = pl_module.step(obs, goal)  # type: ignore
+                            obs, _, _, current_info = self.env.step(action)
+                            if record_video:
+                                # update video
+                                self.rollout_video.update(obs["rgb_obs"]["rgb_static"])
+                            # check if current step solves a task
+                            current_task_info = self.tasks.get_task_info_for_set(start_info, current_info, groundtruth_task)
+                            # check if a task was achieved and if that task is a subset of the original tasks
+                            # we do not just want to solve any task, we want to solve the task that was proposed
+                            if len(current_task_info) > 0:
+                                for task in current_task_info:
+                                    task_id = self.tasks.task_to_id[task]
+                                    # count successful task rollouts
+                                    rollout_task_counter[task_id] += 1
+                                # skip current sequence if task was achieved
+                                success = True
+                                break
+                        if record_video:
+                            if self.add_goal_thumbnail:
+                                if mod == "lang":
+                                    self.rollout_video.add_language_instruction(goal)
+                                else:
+                                    self.rollout_video.add_goal_thumbnail(rgb_obs["rgb_static"][i, -1])
+                            self.rollout_video.draw_outcome(success)
+                            self.rollout_video.write_to_tmp()
 
             counter[mod] = rollout_task_counter  # type: ignore
         # return counter of successful tasks for this batch
@@ -395,6 +435,8 @@ class Rollout(Callback):
             for task in task_info:
                 task_ids.append(self.tasks.task_to_id[task])
                 batch_seq_ids.append(idx.cpu().numpy()[i])
+        # print("task_ids", task_ids)
+        # print("batch_seq_ids", batch_seq_ids)
         return task_ids, batch_seq_ids
 
     def on_save_checkpoint(self, trainer: Trainer, pl_module: LightningModule, checkpoint: Dict[str, Any]) -> None:  # type: ignore
@@ -406,3 +448,21 @@ class Rollout(Callback):
         self.task_to_id_dict = checkpoint.get("task_to_id_dict", None)
         self.id_to_task_dict = checkpoint.get("id_to_task_dict", None)
         self.groundtruth_task_counter = checkpoint.get("groundtruth_task_counter", None)
+        
+    def get_neutral_reset_info(self, task):
+        initial_states = []
+        # use the initial state when the first task in the sequence is equal to the task here
+        iterations = 0
+        while len(initial_states) < 1 and iterations < 10:
+            proposed_seqs = get_sequences(100)
+            for proposed_seq in proposed_seqs:
+                if proposed_seq[1][0] == task:
+                    initial_states.append(proposed_seq[0])
+            iterations += 1
+        if len(initial_states):
+            initial_state = random.choice(initial_states)
+            robot_obs, scene_obs = get_env_state_for_initial_condition(initial_state)
+            return robot_obs, scene_obs
+        else:
+            print(f"No initial state found for this task {task}. We can use the first initial state in the dataset.")
+            return None, None

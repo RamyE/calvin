@@ -147,6 +147,13 @@ dataset/*
 wandb/*
 
 # Ignore Ramy specific files
-notes.txt
 training_logs.txt
 egl_ids.txt
+
+
+**/wandb/**
+*.ckpt
+nohup.out
+calvin_models/calvin_agent/*.png
+calvin_models/calvin_agent/nohup*.out
+pretrained/D_D_static_rgb_baseline.zip

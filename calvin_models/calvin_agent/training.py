@@ -20,6 +20,7 @@ from pytorch_lightning.loggers import Logger
 from pytorch_lightning.utilities import rank_zero_only
 
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
 
 
 @hydra.main(config_path="../conf", config_name="config")
@@ -63,6 +64,7 @@ def train(cfg: DictConfig) -> None:
             modify_argv_hydra()
 
     trainer = Trainer(**trainer_args)
+    # trainer.validate(model, datamodule=datamodule, ckpt_path=chk)
 
     # Start training
     trainer.fit(model, datamodule=datamodule, ckpt_path=chk)  # type: ignore
