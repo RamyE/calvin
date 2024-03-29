@@ -75,3 +75,14 @@ nohup python training.py +trainer.gpus=8 datamodule.root_data_dir=/dev/shm/task_
 
 # without segmentation
 nohup python training.py +trainer.gpus=8 datamodule.root_data_dir=/dev/shm/task_D_D_new2 datamodule/datasets=lang_only datamodule/observation_space=lang_rgb_static_abs_act  ~callbacks/rollout_lh ~callbacks/tsne_plot model=simple_model model.action_decoder.plan_features=0 datamodule.datasets.lang_dataset.lang_folder=lang_one_hot model.language_goal.language_features=34 callbacks.rollout.ep_len=200 callbacks.rollout.num_rollouts_per_task=25 callbacks.rollout.neutral_init=True &
+
+# segmentation + RBB data
+nohup python training.py +trainer.gpus=8 datamodule.root_data_dir=/dev/shm/task_D_D_new2 datamodule/datasets=lang_only datamodule/observation_space=lang_rgb_seg_static_robot_abs_act model/perceptual_encoder=static_RGB_seg  ~callbacks/rollout_lh ~callbacks/tsne_plot model=simple_model model.action_decoder.plan_features=0 datamodule.datasets.lang_dataset.lang_folder=lang_one_hot model.language_goal.language_features=34 callbacks.rollout.ep_len=200 callbacks.rollout.num_rollouts_per_task=25 callbacks.rollout.neutral_init=True &
+
+
+### For Multi-env dataset ### A -> D , using one hot encoding for lang embeddings
+# Segmentation Only
+nohup python training.py +trainer.gpus=8 datamodule.root_data_dir=/dev/shm/task_B_D datamodule/datasets=lang_only datamodule/observation_space=lang_rgb_seg_static_robot_abs_act model/perceptual_encoder=static_seg_only ~callbacks/rollout_lh  ~callbacks/tsne_plot model=simple_model model.action_decoder.plan_features=0 datamodule.datasets.lang_dataset.lang_folder=lang_one_hot model.language_goal.language_features=34 callbacks.rollout.ep_len=200 callbacks.rollout.num_rollouts_per_task=25 &
+
+# RGB Only
+nohup python training.py +trainer.gpus=8 datamodule.root_data_dir=/dev/shm/task_B_D datamodule/datasets=lang_only datamodule/observation_space=lang_rgb_static_abs_act  ~callbacks/rollout_lh ~callbacks/tsne_plot model=simple_model model.action_decoder.plan_features=0 datamodule.datasets.lang_dataset.lang_folder=lang_one_hot model.language_goal.language_features=34 callbacks.rollout.ep_len=200 callbacks.rollout.num_rollouts_per_task=25 &

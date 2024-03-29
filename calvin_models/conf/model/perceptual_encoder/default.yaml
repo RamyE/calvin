@@ -6,7 +6,7 @@ defaults:
  - vision_gripper: none
  - depth_static: none
  - depth_gripper: none
- - seg_static: default
+ - seg_static: none
  - seg_gripper: none
  - proprio: identity
  - tactile: none

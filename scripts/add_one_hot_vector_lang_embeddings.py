@@ -1,16 +1,19 @@
 from pathlib import Path
 import numpy as np
 
-DATASET_PATH = Path("/mnt/vol1/ramy/calvin/dataset/task_D_D_new2/training")
+DATASET_PATH = Path("/mnt/vol1/ramy/calvin/dataset/task_A_D/training")
 ORIG_LANGUAGE_EMBEDDINGS_PATH = DATASET_PATH / "lang_annotations" / "auto_lang_ann.npy"
 NEW_LANGUAGE_EMBEDDINGS_PATH = DATASET_PATH / "lang_one_hot" / "auto_lang_ann.npy"
+#create the new directory if it doesn't exist
+NEW_LANGUAGE_EMBEDDINGS_PATH.parent.mkdir(parents=True, exist_ok=True)
 
-VALIDATION_DATASET_PATH = Path("/mnt/vol1/ramy/calvin/dataset/task_D_D_new2/validation")
+VALIDATION_DATASET_PATH = Path("/mnt/vol1/ramy/calvin/dataset/task_A_D/validation")
 ORIG_LANGUAGE_EMBEDDINGS_PATH_VAL = VALIDATION_DATASET_PATH / "lang_annotations" / "auto_lang_ann.npy"
 NEW_LANGUAGE_EMBEDDINGS_PATH_VAL = VALIDATION_DATASET_PATH / "lang_one_hot" / "auto_lang_ann.npy"
+NEW_LANGUAGE_EMBEDDINGS_PATH_VAL.parent.mkdir(parents=True, exist_ok=True)
 
 
-VALIDATION_DATASET_PATH = Path("/mnt/vol1/ramy/calvin/dataset/task_D_D_new2/validation")
+VALIDATION_DATASET_PATH = Path("/mnt/vol1/ramy/calvin/dataset/task_A_D/validation")
 ORIG_LANGUAGE_EMBEDDINGS_PATH_VALIDATION = VALIDATION_DATASET_PATH / "lang_annotations" / "embeddings.npy"
 NEW_LANGUAGE_EMBEDDINGS_PATH_VALIDATION = VALIDATION_DATASET_PATH / "lang_one_hot" / "embeddings.npy"
 
@@ -50,7 +53,7 @@ lang_data['language']['emb'] = np.array(new_emb)
 np.save(NEW_LANGUAGE_EMBEDDINGS_PATH, lang_data)
 
 
-# do the work for the training dataset - part 1
+# do the work for the validation dataset - part 1
 
 lang_data = np.load(ORIG_LANGUAGE_EMBEDDINGS_PATH_VAL, allow_pickle=True).item()
 

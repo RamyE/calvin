@@ -186,7 +186,7 @@ class Rollout(Callback):
                         rollout_task_counter = torch.sum(
                             pl_module.all_gather(rollout_task_counter), dim=0
                         )  # shape: (num_tasks,)
-                    print("rollout_task_counter", rollout_task_counter)
+                    # print("rollout_task_counter", rollout_task_counter)
                     score = (
                         torch.sum(rollout_task_counter) / torch.sum(self.groundtruth_task_counter)
                         if torch.sum(self.groundtruth_task_counter) > 0

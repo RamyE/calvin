@@ -1,5 +1,6 @@
 rgb_obs: ['rgb_static', 'rgb_gripper']
 depth_obs: ['depth_static', 'depth_gripper']
+decomp_obs: []
 state_obs: ['robot_obs']
 actions: ['actions']
 language: ['language']
