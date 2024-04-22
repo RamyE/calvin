@@ -26,7 +26,7 @@ class ConcatEncoders(nn.Module):
             self._latent_size += vision_gripper.visual_features
         if depth_gripper and vision_gripper.num_c < 4:
             vision_gripper.num_c += depth_gripper.num_c
-        if depth_static and vision_static.num_c < 4:
+        if vision_static and depth_static and vision_static.num_c < 4:
             vision_static.num_c += depth_static.num_c
         if tactile:
             self._latent_size += tactile.visual_features
@@ -34,6 +34,9 @@ class ConcatEncoders(nn.Module):
             self._latent_size += seg_static.visual_features
         if seg_gripper:
             self._latent_size += seg_gripper.visual_features
+        
+        if not vision_static and seg_static and depth_static and seg_static.num_c < 2:
+            seg_static.num_c += depth_static.num_c
 
         self.vision_static_encoder = hydra.utils.instantiate(vision_static)
         self.vision_gripper_encoder = hydra.utils.instantiate(vision_gripper) if vision_gripper else None
@@ -106,6 +109,10 @@ class ConcatEncoders(nn.Module):
             seg_static = torch.unsqueeze(seg_static, 2)
             b, s, c, h, w = seg_static.shape
             seg_static = seg_static.reshape(-1, c, h, w)
+            if not self.vision_static_encoder and depth_static is not None:
+                depth_static = torch.unsqueeze(depth_static, 2)
+                depth_static = depth_static.reshape(-1, 1, h, w)  # (batch_size * sequence_length, 1, 200, 200)
+                seg_static = torch.cat([seg_static, depth_static], dim=1)  # (batch_size * sequence_length, 2, 200, 200)
             encoded_seg_static = self.seg_static_encoder(seg_static)
             encoded_seg_static = encoded_seg_static.reshape(b, s, -1)
             if encoded_imgs is not None:

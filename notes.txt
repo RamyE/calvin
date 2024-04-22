@@ -80,9 +80,19 @@ nohup python training.py +trainer.gpus=8 datamodule.root_data_dir=/dev/shm/task_
 nohup python training.py +trainer.gpus=8 datamodule.root_data_dir=/dev/shm/task_D_D_new2 datamodule/datasets=lang_only datamodule/observation_space=lang_rgb_seg_static_robot_abs_act model/perceptual_encoder=static_RGB_seg  ~callbacks/rollout_lh ~callbacks/tsne_plot model=simple_model model.action_decoder.plan_features=0 datamodule.datasets.lang_dataset.lang_folder=lang_one_hot model.language_goal.language_features=34 callbacks.rollout.ep_len=200 callbacks.rollout.num_rollouts_per_task=25 callbacks.rollout.neutral_init=True &
 
 
-### For Multi-env dataset ### A -> D , using one hot encoding for lang embeddings
+### For Multi-env dataset ### B -> D , using one hot encoding for lang embeddings
 # Segmentation Only
-nohup python training.py +trainer.gpus=8 datamodule.root_data_dir=/dev/shm/task_B_D datamodule/datasets=lang_only datamodule/observation_space=lang_rgb_seg_static_robot_abs_act model/perceptual_encoder=static_seg_only ~callbacks/rollout_lh  ~callbacks/tsne_plot model=simple_model model.action_decoder.plan_features=0 datamodule.datasets.lang_dataset.lang_folder=lang_one_hot model.language_goal.language_features=34 callbacks.rollout.ep_len=200 callbacks.rollout.num_rollouts_per_task=25 &
+nohup python training.py +trainer.gpus=8 datamodule.root_data_dir=/dev/shm/task_B_D datamodule/datasets=lang_only datamodule/observation_space=lang_rgb_seg_static_robot_abs_act model/perceptual_encoder=static_seg_only ~callbacks/rollout_lh  ~callbacks/tsne_plot model=simple_model model.action_decoder.plan_features=0 datamodule.datasets.lang_dataset.lang_folder=lang_one_hot model.language_goal.language_features=34 &
 
 # RGB Only
-nohup python training.py +trainer.gpus=8 datamodule.root_data_dir=/dev/shm/task_B_D datamodule/datasets=lang_only datamodule/observation_space=lang_rgb_static_abs_act  ~callbacks/rollout_lh ~callbacks/tsne_plot model=simple_model model.action_decoder.plan_features=0 datamodule.datasets.lang_dataset.lang_folder=lang_one_hot model.language_goal.language_features=34 callbacks.rollout.ep_len=200 callbacks.rollout.num_rollouts_per_task=25 &
+nohup python training.py +trainer.gpus=8 datamodule.root_data_dir=/dev/shm/task_B_D datamodule/datasets=lang_only datamodule/observation_space=lang_rgb_static_abs_act  ~callbacks/rollout_lh ~callbacks/tsne_plot model=simple_model model.action_decoder.plan_features=0 datamodule.datasets.lang_dataset.lang_folder=lang_one_hot model.language_goal.language_features=34 &
+
+### For Multi-env dataset ### B -> D , using one hot encoding for lang embeddings, using original paper model
+# Segmentation Only
+nohup python training.py +trainer.gpus=8 datamodule.root_data_dir=/dev/shm/task_B_D datamodule/datasets=lang_only datamodule/observation_space=lang_rgb_seg_static_robot_abs_act model/perceptual_encoder=static_seg_only ~callbacks/rollout_lh  ~callbacks/tsne_plot datamodule.datasets.lang_dataset.lang_folder=lang_one_hot model.language_goal.language_features=34 +model.plan_recognition.lstm=True &
+# RGB Only
+nohup python training.py +trainer.gpus=8 datamodule.root_data_dir=/dev/shm/task_B_D datamodule/datasets=lang_only datamodule/observation_space=lang_rgb_static_abs_act  ~callbacks/rollout_lh ~callbacks/tsne_plot datamodule.datasets.lang_dataset.lang_folder=lang_one_hot model.language_goal.language_features=34 +model.plan_recognition.lstm=True &
+# segmentation + RBB Data
+nohup python training.py +trainer.gpus=8 datamodule.root_data_dir=/dev/shm/task_B_D datamodule/datasets=lang_only datamodule/observation_space=lang_rgb_seg_static_robot_abs_act model/perceptual_encoder=static_RGB_seg ~callbacks/rollout_lh  ~callbacks/tsne_plot datamodule.datasets.lang_dataset.lang_folder=lang_one_hot model.language_goal.language_features=34 +model.plan_recognition.lstm=True &
+# segmentation + Depth Data
+nohup python training.py +trainer.gpus=8 datamodule.root_data_dir=/dev/shm/task_B_D datamodule/datasets=lang_only datamodule/observation_space=lang_rgbd_seg_static_robot_abs_act model/perceptual_encoder=static_depth_seg ~callbacks/rollout_lh  ~callbacks/tsne_plot datamodule.datasets.lang_dataset.lang_folder=lang_one_hot model.language_goal.language_features=34 +model.plan_recognition.lstm=True &

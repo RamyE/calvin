@@ -16,8 +16,15 @@ if __name__ == "__main__":
         print(f"Path {args.path} is either not a directory, or does not exist.")
         exit()
 
-    indices = next(iter(np.load(f"{args.path}/scene_info.npy", allow_pickle=True).item().values()))
-    indices = list(range(indices[0], indices[1] + 1))
+    # check if it is the training dataset, in which case there will be scene_info.npy
+    if Path(f"{args.path}/scene_info.npy").is_file():
+        indices = next(iter(np.load(f"{args.path}/scene_info.npy", allow_pickle=True).item().values()))
+        indices = list(range(indices[0], indices[1] + 1))
+    else:
+        # if there is no scene_info, we will need to look for the indices in the filenames
+        # the format should be episode_{index}.npz
+        indices = [int(str(f.name).split("_")[1].split(".")[0]) for f in Path(args.path).iterdir() if f.is_file() and f.name.endswith(".npz")]
+        print("No scene_info.npy found, using indices from filenames.")
 
     annotations = np.load(f"{args.path}/lang_annotations/auto_lang_ann.npy", allow_pickle=True).item()
     annotations = list(zip(annotations["info"]["indx"], annotations["language"]["ann"]))

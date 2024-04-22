@@ -500,9 +500,18 @@ class MCIL(pl.LightningModule, CalvinBaseModel):
             embeddings_path: Path to <dataset>/validation/embeddings.npy
         """
         embeddings = np.load(embeddings_path, allow_pickle=True).item()
+        extra_embeddings = np.load(str(embeddings_path).replace("embeddings", "auto_lang_ann"), allow_pickle=True).item()
+        ann = extra_embeddings['language']['ann']
+        emb = extra_embeddings['language']['emb']
         # we want to get the embedding for full sentence, not just a task name
         self.lang_embeddings = {v["ann"][0]: v["emb"] for k, v in embeddings.items()}
-
+        
+        for a in ann:
+            if a not in self.lang_embeddings.keys():
+                self.lang_embeddings[a] = np.expand_dims(emb[ann.index(a)], axis=0)
+                
+        # print(self.lang_embeddings)
+        
     def predict_with_plan(
         self,
         obs: Dict[str, Any],

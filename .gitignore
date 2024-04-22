@@ -157,3 +157,5 @@ nohup.out
 calvin_models/calvin_agent/*.png
 calvin_models/calvin_agent/nohup*.out
 pretrained/D_D_static_rgb_baseline.zip
+
+sample_dataset/*

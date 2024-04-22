@@ -5,11 +5,13 @@ import os
 import numpy as np
 from tqdm import tqdm
 
-# DATASET_PATH = "/mnt/vol1/ramy/calvin/dataset/task_ABC_D/"
-# NEW_DATA_PATH = "/mnt/vol1/ramy/calvin/dataset/task_B_D/"
+DATASET_PATH = "/mnt/vol1/ramy/calvin/dataset/task_B_D/"
+NEW_DATA_PATH = "/mnt/vol1/ramy/calvin/dataset/task_B_D/"
+FILTER_SCENE = "calvin_scene_B"
 
-DATASET_PATH = "/mnt/vol1/ramy/calvin/dataset/task_D_D/"
-NEW_DATA_PATH = "/mnt/vol1/ramy/calvin/dataset/task_D_D_new2/"
+# DATASET_PATH = "/mnt/vol1/ramy/calvin/dataset/task_D_D/"
+# NEW_DATA_PATH = "/mnt/vol1/ramy/calvin/dataset/task_D_D_new2/"
+# FILTER_SCENE = None
 
 CAMERA = "static" # "static" or "gripper"
 
@@ -87,8 +89,9 @@ if __name__ == '__main__':
         env, current_scene_name = create_env()
         files_list = [f for f in os.listdir(os.path.join(DATASET_PATH, type)) if f.endswith(".npz")]
         # filter only the files that belong to scene B for the training set
-        # if type == "training":
-        #     files_list = [f for f in files_list if get_scene_name(int(f.strip('.npz').split("_")[1])) == "calvin_scene_B"]
+        if FILTER_SCENE is not None:
+            if type == "training":
+                files_list = [f for f in files_list if get_scene_name(int(f.strip('.npz').split("_")[1])) == FILTER_SCENE]
         files_list.sort()
         for episode_step_f in tqdm(files_list):
             # ignore files that have already been processed
