@@ -159,3 +159,6 @@ calvin_models/calvin_agent/nohup*.out
 pretrained/D_D_static_rgb_baseline.zip
 
 sample_dataset/*
+
+artifacts/*
+scripts/llm_progress_assessment/batch_files/**

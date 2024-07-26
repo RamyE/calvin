@@ -1,0 +1,359 @@
+# Feasibility Analysis
+
+GPT-4o
+200x200:
+- python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py feasibility feasibility_seq_200_200p_all_skip6_frames_may27 --groundtruth success wrong --prompt 1 --max_test_episodes 100 --num_candidates 1 --platform OPENAI
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/7ff2auv8  97.89 - 89.36   Unsure rate:  0.06 [0.06, 0.05]   
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/ctwedz98  98.99 - 82.47   Unsure rate:  0.02 [0.03, 0.01]   
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/2y52ltyk  97.00 - 84.54   Unsure rate:  0.02 [0.03, 0.0]   
+500x500:
+- python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py feasibility feasibility_seq_500_500p_all_skip6_frames_may27 --groundtruth success wrong --prompt 1 --max_test_episodes 100 --num_candidates 1 --platform OPENAI
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/15x4hdls  99.00 - 86.96   Unsure rate:  0.04 [0.08, 0.0]   
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/lb4k361z  99.00 - 83.51   Unsure rate:  0.02 [0.03, 0.0]   
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/da33rqkw  98.99 - 84.38   Unsure rate:  0.02 [0.04, 0.01]   
+768x768x
+- python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py feasibility feasibility_seq_768_768p_all_skip6_frames_may27 --groundtruth success wrong --prompt 1 --max_test_episodes 100 --num_candidates 1 --platform OPENAI
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/xb3w6cfa  99.00 - 89.47   Unsure rate:  0.02 [0.05, 0.0]   
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/ahw10kcf  98.99 - 84.69   Unsure rate:  0.02 [0.02, 0.01]   
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/j7dthe0w  99.00 - 84.04   Unsure rate:  0.03 [0.06, 0.0]   
+768x768x (prompt 2)
+- python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py feasibility feasibility_seq_768_768p_all_skip6_frames_may27 --groundtruth success wrong --prompt 2 --max_test_episodes 100 --num_candidates 1 --platform OPENAI
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/s3nbtqam  96.84 - 84.69
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/irb8we78  95.79 - 86.81
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/uts4ad9z  97.98 - 87.63
+
+
+GPT-4
+200x200:
+- python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py feasibility feasibility_seq_200_200p_all_skip6_frames_may27 --groundtruth success wrong --prompt 1 --max_test_episodes 100 --num_candidates 1 --platform OPENAI --gpt_model_name gpt-4-turbo
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/21hlt8zu  96.91 - 33.33   Unsure rate:  0.04 [0.04, 0.03]   
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/s3pfoa4k  98.98 - 28.42   Unsure rate:  0.03 [0.05, 0.01]   
+500x500:
+- python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py feasibility feasibility_seq_500_500p_all_skip6_frames_may27 --groundtruth success wrong --prompt 1 --max_test_episodes 100 --num_candidates 1 --platform OPENAI --gpt_model_name gpt-4-turbo
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/0wr2uoq5  98.99 - 36.46   Unsure rate:  0.02 [0.04, 0.01]   
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/4wyw36fn  97.98 - 40.62   Unsure rate:  0.02 [0.04, 0.01]   
+768x768:
+- python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py feasibility feasibility_seq_768_768p_all_skip6_frames_may27 --groundtruth success wrong --prompt 1 --max_test_episodes 100 --num_candidates 1 --platform OPENAI --gpt_model_name gpt-4-turbo
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/xqwr3ckj  97.98 - 54.74   Unsure rate:  0.03 [0.05, 0.01]   
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/ld81v93i  96.00 - 52.08   Unsure rate:  0.02 [0.04, 0.0]   
+
+Gemini
+200x200:
+- python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py feasibility feasibility_seq_200_200p_all_skip6_frames_may27 --groundtruth success wrong --prompt 1 --max_test_episodes 100 --num_candidates 1 --platform GOOGLE
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/f9nswif2  89.61 - 88.64   Unsure rate:  0.18 [0.12, 0.23]   
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/mz1sxmpy  93.42 - 91.67   Unsure rate:  0.19 [0.14, 0.24]   
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/kkbmc8nc  89.74 - 88.51   Unsure rate:  0.18 [0.13, 0.22]   
+500x500:
+- python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py feasibility feasibility_seq_500_500p_all_skip6_frames_may27 --groundtruth success wrong --prompt 1 --max_test_episodes 100 --num_candidates 1 --platform GOOGLE
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/3rzyvh2o  93.02 - 91.95   Unsure rate:  0.14 [0.13, 0.14]   
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/ouwrlezu  90.91 - 92.31   Unsure rate:  0.22 [0.09, 0.35]   
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/9jtmas9o  91.03 - 92.13   Unsure rate:  0.16 [0.11, 0.21]   
+768x768:
+- python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py feasibility feasibility_seq_768_768p_all_skip6_frames_may27 --groundtruth success wrong --prompt 1 --max_test_episodes 100 --num_candidates 1 --platform GOOGLE
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/51flo8j9  93.06 - 95.35   Unsure rate:  0.21 [0.14, 0.28]   
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/lx7bpcfm  91.03 - 91.30   Unsure rate:  0.15 [0.08, 0.22]   
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/rk88bqvu  96.25 - 88.37   Unsure rate:  0.17 [0.14, 0.2]  (Vertex AI)
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/35744ptj  89.53 - 86.52   Unsure rate:  0.12 [0.11, 0.14]   
+3072x3072:
+- python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py feasibility feasibility_seq_3072_3072p_all_skip6_frames_may27 --groundtruth success wrong --prompt 1 --max_test_episodes 100 --num_candidates 1 --platform GOOGLE
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/c1wu4qou  93.67 - 87.06   Unsure rate:  0.18 [0.15, 0.2]   
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/rkz75h05  90.36 - 91.67   Unsure rate:  0.16 [0.16, 0.17]   
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/bzwuz1vd  95.95 - 88.10   Unsure rate:  0.2 [0.15, 0.24]  (Vertex AI)
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/o37out9r  93.75 - 76.83   Unsure rate:  0.19 [0.18, 0.2]   
+768x768: (prompt 2)
+- python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py feasibility feasibility_seq_768_768p_all_skip6_frames_may27 --groundtruth success wrong --prompt 2 --max_test_episodes 100 --num_candidates 1 --platform GOOGLE
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/zqisdgxv  57.32 - 95.83
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/bv1rxl57  60.71 - 100.00
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/eu5vvyw7  61.45 - 98.97
+
+
+
+
+
+# Success Detection
+## Image Feed
+GPT-4o
+sequential:
+- python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py success success_seq_768_768p_all_skip6_frames_may23 --groundtruth success wrong --prompt 5 --max_test_episodes 100 --num_candidates 1 --platform OPENAI
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/3g1w8mlx  85.57 - 53.19   Unsure rate:  0.04 [0.06, 0.03]   
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/8spm5eba  87.88 - 52.63   Unsure rate:  0.03 [0.05, 0.01]   
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/z62abtkh  81.63 - 50.54   Unsure rate:  0.05 [0.07, 0.02]   
+grid:
+- python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py success success_grid_2048_768p_NxN_skip6_frames_may23 --groundtruth success wrong --prompt 6 --max_test_episodes 100 --num_candidates 1 --platform OPENAI
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/tyyxtc8h  88.78 - 40.00   Unsure rate:  0.04 [0.05, 0.02]   
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/uwsdm376  85.00 - 40.00   Unsure rate:  0.02 [0.05, 0.0]   
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/jt74vmyr  79.59 - 42.86   Unsure rate:  0.02 [0.02, 0.02]   
+
+Gemini
+sequential:
+- python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py success success_seq_768_768p_all_skip6_frames_may23 --groundtruth success wrong --prompt 5 --max_test_episodes 100 --num_candidates 1 --platform GOOGLE
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/d0f2i5ij  59.09 - 69.33   Unsure rate:  0.26 [0.2, 0.33]   
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/cztogse7  56.00 - 69.44   Unsure rate:  0.22 [0.22, 0.23]   
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/ptc8pqfe  53.16 - 75.00   Unsure rate:  0.23 [0.28, 0.18]   
+grid:
+- python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py success success_grid_2048_768p_NxN_skip6_frames_may23 --groundtruth success wrong --prompt 6 --max_test_episodes 100 --num_candidates 1 --platform GOOGLE
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/go1awoh7  69.32 - 46.99   Unsure rate:  0.14 [0.17, 0.11]   
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/nynaltn3  79.75 - 30.86   Unsure rate:  0.18 [0.17, 0.19]   
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/gvboop81  75.29 - 44.83   Unsure rate:  0.13 [0.12, 0.14]   
+
+
+## Skip Frames
+GPT-4o
+sequential ONLY 2 FRAMES:
+- python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py success success_seq_768_768p_all_skip999_frames_may27 --groundtruth success wrong --prompt 5 --max_test_episodes 100 --num_candidates 1 --platform OPENAI
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/8a9awg4z  57.29 - 85.53   Unsure rate:  0.14 [0.24, 0.04]   
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/8omkchh5  64.77 - 80.68   Unsure rate:  0.12 [0.12, 0.11]   
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/nr4evx3a  68.18 - 76.54   Unsure rate:  0.16 [0.19, 0.12]   
+sequential SKIP 3 FRAMES:
+- python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py success success_seq_768_768p_all_skip3_frames_may27 --groundtruth success wrong --prompt 5 --max_test_episodes 100 --num_candidates 1 --platform OPENAI
+- !!!! https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/86bwp43u  56.00 - 62.00   Unsure rate:  0.0 [0.0, 0.0]  WRONG@
+- !!!! https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/ilpq4lj6  66.00 - 60.60   Unsure rate:  0.0 [0.01, 0.0]   WRONG!
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/fahzaxp8  87.88 - 45.74   Unsure rate:  0.03 [0.06, 0.01]
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/c5ec9pn1  88.78 - 45.65   Unsure rate:  0.05 [0.08, 0.02]
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/nphkkbut  88.54 - 47.92   Unsure rate:  0.04 [0.04, 0.03]   
+
+Gemini
+sequential ONLY 2 FRAMES:
+- python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py success success_seq_768_768p_all_skip999_frames_may27 --groundtruth success wrong --prompt 5 --max_test_episodes 100 --num_candidates 1 --platform GOOGLE
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/ml0j50xp  63.79 - 88.68   Unsure rate:  0.44 [0.47, 0.42]   
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/iuzal247  66.67 - 90.57   Unsure rate:  0.42 [0.47, 0.37]   
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/flqfwg62  71.19 - 87.04   Unsure rate:  0.44 [0.46, 0.41]   
+sequential SKIP 3 FRAMES:
+- python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py success success_seq_768_768p_all_skip3_frames_may27 --groundtruth success wrong --prompt 5 --max_test_episodes 100 --num_candidates 1 --platform GOOGLE
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/21v23o7e  59.72 - 67.69   Unsure rate:  0.27 [0.31, 0.23]   
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/yjm778de  56.06 - 69.35   Unsure rate:  0.29 [0.3, 0.27]   
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/1vqlnk3b  55.38 - 70.15   Unsure rate:  0.27 [0.27, 0.27]   
+
+
+
+
+
+# Progress Assessment
+GPT-4o
+Without CoT 
+- python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py progress progress_seq_768_768p_5_skip7_frames_may27 --groundtruth success wrong --prompt 16 --max_test_episodes 100 --num_candidates 1 --platform OPENAI
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/mazooyte  94.95 - 35.71   Unsure rate:  0.02 [0.02, 0.01]   
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/mg7pbw4f  94.89 - 32.29   Unsure rate:  0.03 [0.04, 0.02]   
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/yovwli99  96.97 - 32.99   Unsure rate:  0.02 [0.03, 0.01]   
+
+with CoT
+- python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py progress progress_seq_768_768p_5_skip7_frames_may27 --groundtruth success wrong --prompt 15 --max_test_episodes 100 --num_candidates 1 --platform OPENAI
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/oymzax19  61.00 - 68.37   Unsure rate:  0.01 [0.02, 0.0]   
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/wwjktv76  55.55 - 63.91   Unsure rate:  0.02 [0.02, 0.01]   
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/a6hyj4i5  67.00 - 73.20   Unsure rate:  0.02 [0.03, 0.0]   
+
+with RCI-like
+- python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py progress progress_seq_768_768p_5_skip7_frames_may27 --groundtruth success wrong --prompt 17 --max_test_episodes 100 --num_candidates 1 --platform OPENAI
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/qgb4gaj5  47.37 - 80.41   Unsure rate:  0.04 [0.03, 0.05]   
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/d7xi7708  44.33 - 82.47   Unsure rate:  0.03 [0.03, 0.03]   
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/ychovkbv  45.16 - 83.84   Unsure rate:  0.04 [0.01, 0.07]   
+
+Gemini
+Without CoT 
+- python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py progress progress_seq_768_768p_5_skip7_frames_may27 --groundtruth success wrong --prompt 16 --max_test_episodes 100 --num_candidates 1 --platform GOOGLE
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/oz462q4z  67.47 - 58.02   Unsure rate:  0.18 [0.19, 0.17]   
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/tktsjrfv  70.13 - 60.26   Unsure rate:  0.22 [0.22, 0.23]   
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/3wq3tlwd  59.76 - 63.16   Unsure rate:  0.21 [0.24, 0.18]   
+
+with CoT
+- python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py progress progress_seq_768_768p_5_skip7_frames_may27 --groundtruth success wrong --prompt 15 --max_test_episodes 100 --num_candidates 1 --platform GOOGLE
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/e13s0n8c  36.67 - 88.89   Unsure rate:  0.37 [0.37, 0.37]   
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/qnmi6xo7  26.56 - 89.39   Unsure rate:  0.35 [0.34, 0.36]   
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/c158w4hy  23.88 - 82.54   Unsure rate:  0.34 [0.36, 0.32]   
+
+with RCI-like
+- python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py progress progress_seq_768_768p_5_skip7_frames_may27 --groundtruth success wrong --prompt 17 --max_test_episodes 100 --num_candidates 1 --platform GOOGLE
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/0lygq7kw  28.57 - 72.97   Unsure rate:  0.63 [0.61, 0.65]   
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/kb215ucw  25.71 - 87.50   Unsure rate:  0.58 [0.52, 0.65]   
+- https://wandb.ai/ramye/LLM%20Progress%20Assessment/runs/hc23fjog  26.32 - 93.02   Unsure rate:  0.6 [0.57, 0.62]   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py success success_seq_768_768p_all_skip6_frames_may23 --groundtruth success wrong --prompt 5 --max_test_episodes 100 --num_candidates 1 --platform OPENAI ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py success success_grid_2048_768p_NxN_skip6_frames_may23 --groundtruth success wrong --prompt 6 --max_test_episodes 100 --num_candidates 1 --platform OPENAI ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py success success_seq_768_768p_all_skip999_frames_may27 --groundtruth success wrong --prompt 5 --max_test_episodes 100 --num_candidates 1 --platform OPENAI ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py success success_seq_768_768p_all_skip3_frames_may27 --groundtruth success wrong --prompt 5 --max_test_episodes 100 --num_candidates 1 --platform OPENAI ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py progress progress_seq_768_768p_5_skip7_frames_may27 --groundtruth success wrong --prompt 16 --max_test_episodes 100 --num_candidates 1 --platform OPENAI ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py progress progress_seq_768_768p_5_skip7_frames_may27 --groundtruth success wrong --prompt 15 --max_test_episodes 100 --num_candidates 1 --platform OPENAI) 2>&1 | tee june21_overnight_1.txt
+
+
+(python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py success success_seq_768_768p_all_skip6_frames_may23 --groundtruth success wrong --prompt 5 --max_test_episodes 100 --num_candidates 1 --platform GOOGLE ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py success success_grid_2048_768p_NxN_skip6_frames_may23 --groundtruth success wrong --prompt 6 --max_test_episodes 100 --num_candidates 1 --platform GOOGLE ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py success success_seq_768_768p_all_skip999_frames_may27 --groundtruth success wrong --prompt 5 --max_test_episodes 100 --num_candidates 1 --platform GOOGLE ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py success success_seq_768_768p_all_skip3_frames_may27 --groundtruth success wrong --prompt 5 --max_test_episodes 100 --num_candidates 1 --platform GOOGLE ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py progress progress_seq_768_768p_5_skip7_frames_may27 --groundtruth success wrong --prompt 16 --max_test_episodes 100 --num_candidates 1 --platform GOOGLE ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py progress progress_seq_768_768p_5_skip7_frames_may27 --groundtruth success wrong --prompt 15 --max_test_episodes 100 --num_candidates 1 --platform GOOGLE) 2>&1 | tee june21_overnight_2.txt
+
+
+
+
+(python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py feasibility feasibility_seq_200_200p_all_skip6_frames_may27 --groundtruth success wrong --prompt 1 --max_test_episodes 100 --num_candidates 1 --platform OPENAI ; 
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py feasibility feasibility_seq_500_500p_all_skip6_frames_may27 --groundtruth success wrong --prompt 1 --max_test_episodes 100 --num_candidates 1 --platform OPENAI ; 
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py feasibility feasibility_seq_768_768p_all_skip6_frames_may27 --groundtruth success wrong --prompt 1 --max_test_episodes 100 --num_candidates 1 --platform OPENAI ; 
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py feasibility feasibility_seq_200_200p_all_skip6_frames_may27 --groundtruth success wrong --prompt 1 --max_test_episodes 100 --num_candidates 1 --platform OPENAI --gpt_model_name gpt-4-turbo ; 
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py feasibility feasibility_seq_500_500p_all_skip6_frames_may27 --groundtruth success wrong --prompt 1 --max_test_episodes 100 --num_candidates 1 --platform OPENAI --gpt_model_name gpt-4-turbo ; 
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py feasibility feasibility_seq_768_768p_all_skip6_frames_may27 --groundtruth success wrong --prompt 1 --max_test_episodes 100 --num_candidates 1 --platform OPENAI --gpt_model_name gpt-4-turbo) 2>&1 | tee may27overnight_1.txt
+
+
+
+(python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py feasibility feasibility_seq_200_200p_all_skip6_frames_may27 --groundtruth success wrong --prompt 1 --max_test_episodes 100 --num_candidates 1 --platform GOOGLE ; 
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py feasibility feasibility_seq_500_500p_all_skip6_frames_may27 --groundtruth success wrong --prompt 1 --max_test_episodes 100 --num_candidates 1 --platform GOOGLE ; 
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py feasibility feasibility_seq_768_768p_all_skip6_frames_may27 --groundtruth success wrong --prompt 1 --max_test_episodes 100 --num_candidates 1 --platform GOOGLE ; 
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py feasibility feasibility_seq_3072_3072p_all_skip6_frames_may27 --groundtruth success wrong --prompt 1 --max_test_episodes 100 --num_candidates 1 --platform GOOGLE) 2>&1 | tee may27overnight_2.txt
+
+
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/correct_wandb_run.py 
+
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/get_data_from_wandb.py  3g1w8mlx ; 
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/get_data_from_wandb.py  8spm5eba ; 
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/get_data_from_wandb.py  tyyxtc8h ; 
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/get_data_from_wandb.py  uwsdm376 ; 
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/get_data_from_wandb.py  8a9awg4z ; 
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/get_data_from_wandb.py  8omkchh5
+
+
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/correct_wandb_run.py  f9nswif2 ; 
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/correct_wandb_run.py  mz1sxmpy ; 
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/correct_wandb_run.py  3rzyvh2o ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/correct_wandb_run.py  ouwrlezu ; 
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/correct_wandb_run.py  51flo8j9 ; 
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/correct_wandb_run.py  lx7bpcfm ; 
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/correct_wandb_run.py  c1wu4qou ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/correct_wandb_run.py  rkz75h05
+
+
+(python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py feasibility feasibility_seq_200_200p_all_skip6_frames_may27 --groundtruth success wrong --prompt 1 --max_test_episodes 100 --num_candidates 1 --platform OPENAI ; 
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py feasibility feasibility_seq_500_500p_all_skip6_frames_may27 --groundtruth success wrong --prompt 1 --max_test_episodes 100 --num_candidates 1 --platform OPENAI ; 
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py feasibility feasibility_seq_768_768p_all_skip6_frames_may27 --groundtruth success wrong --prompt 1 --max_test_episodes 100 --num_candidates 1 --platform OPENAI) 2>&1 | tee may28afternoon_1.txt
+
+
+(python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py feasibility feasibility_seq_768_768p_all_skip6_frames_may27 --groundtruth success wrong --prompt 1 --max_test_episodes 100 --num_candidates 1 --platform GOOGLE ; 
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py feasibility feasibility_seq_3072_3072p_all_skip6_frames_may27 --groundtruth success wrong --prompt 1 --max_test_episodes 100 --num_candidates 1 --platform GOOGLE) 2>&1 | tee may28afternoon_3.txt
+
+
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/get_data_from_wandb.py s3nbtqam ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/get_data_from_wandb.py irb8we78 ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/get_data_from_wandb.py uts4ad9z ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/get_data_from_wandb.py zqisdgxv ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/get_data_from_wandb.py bv1rxl57 ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/get_data_from_wandb.py eu5vvyw7
+
+
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/get_data_from_wandb.py qgb4gaj5 ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/get_data_from_wandb.py d7xi7708 ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/get_data_from_wandb.py ychovkbv ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/get_data_from_wandb.py 0lygq7kw ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/get_data_from_wandb.py kb215ucw ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/get_data_from_wandb.py hc23fjog 
+
+(python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py progress progress_seq_768_768p_5_skip7_frames_may27 --groundtruth success wrong --prompt 17 --max_test_episodes 100 --num_candidates 1 --platform OPENAI ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py progress progress_seq_768_768p_5_skip7_frames_may27 --groundtruth success wrong --prompt 17 --max_test_episodes 100 --num_candidates 1 --platform OPENAI ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py progress progress_seq_768_768p_5_skip7_frames_may27 --groundtruth success wrong --prompt 17 --max_test_episodes 100 --num_candidates 1 --platform OPENAI) 2>&1 | tee june22_overnoght_1.txt
+
+
+
+
+(python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py feasibility feasibility_seq_768_768p_all_skip6_frames_may27 --groundtruth success wrong --prompt 1 --max_test_episodes 100 --num_candidates 1 --platform GOOGLE ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py feasibility feasibility_seq_768_768p_all_skip6_frames_may27 --groundtruth success wrong --prompt 1 --max_test_episodes 100 --num_candidates 1 --platform GOOGLE ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py feasibility feasibility_seq_768_768p_all_skip6_frames_may27 --groundtruth success wrong --prompt 1 --max_test_episodes 100 --num_candidates 1 --platform GOOGLE) 2>&1 | tee june25_morning_1.txt
+
+
+
+(python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py 7ff2auv8 ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py ctwedz98 ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py 2y52ltyk ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py 15x4hdls ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py lb4k361z ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py da33rqkw ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py xb3w6cfa ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py ahw10kcf ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py j7dthe0w ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py 21hlt8zu ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py s3pfoa4k ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py 0wr2uoq5 ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py 4wyw36fn ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py xqwr3ckj ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py ld81v93i ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py f9nswif2 ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py mz1sxmpy ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py kkbmc8nc ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py 3rzyvh2o ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py ouwrlezu ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py 9jtmas9o ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py 51flo8j9 ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py lx7bpcfm ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py rk88bqvu ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py 35744ptj ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py c1wu4qou ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py rkz75h05 ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py bzwuz1vd ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py o37out9r ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py 3g1w8mlx ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py 8spm5eba ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py z62abtkh ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py tyyxtc8h ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py uwsdm376 ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py jt74vmyr ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py d0f2i5ij ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py cztogse7 ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py ptc8pqfe ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py go1awoh7 ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py nynaltn3 ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py gvboop81 ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py 8a9awg4z ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py 8omkchh5 ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py nr4evx3a ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py 86bwp43u ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py ilpq4lj6 ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py nphkkbut ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py ml0j50xp ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py iuzal247 ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py flqfwg62 ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py 21v23o7e ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py yjm778de ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py 1vqlnk3b ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py mazooyte ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py mg7pbw4f ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py yovwli99 ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py oymzax19 ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py wwjktv76 ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py a6hyj4i5 ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py qgb4gaj5 ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py d7xi7708 ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py ychovkbv ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py oz462q4z ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py tktsjrfv ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py 3wq3tlwd ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py e13s0n8c ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py qnmi6xo7 ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py c158w4hy ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/get_data_from_wandb.py fahzaxp8 ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/get_data_from_wandb.py c5ec9pn1 ;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/calculate_unsure_rate.py hc23fjog) 2>&1 | tee june24_overnight_2.txt
+
+
+(python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py success success_seq_768_768p_all_skip3_frames_may27 --groundtruth success wrong --prompt 5 --max_test_episodes 100 --num_candidates 1 --platform OPENAI;
+python /home/uoft/ramy/calvin/scripts/llm_progress_assessment/progress_assessment.py success success_seq_768_768p_all_skip3_frames_may27 --groundtruth success wrong --prompt 5 --max_test_episodes 100 --num_candidates 1 --platform OPENAI)  2>&1 | tee june27_overnight_1.txt
+

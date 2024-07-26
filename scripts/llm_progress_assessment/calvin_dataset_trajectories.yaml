@@ -1,0 +1,8 @@
+datasets:
+- dataset: task_B_D
+  subset: training
+  scene_name: calvin_scene_D
+  trajectories:+
+  - index: 000
+
+

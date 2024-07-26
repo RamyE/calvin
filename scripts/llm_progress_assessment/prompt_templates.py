@@ -93,6 +93,69 @@ PROGRESS_PROMPT_TEMPLATE_11 = [
     """
     ]
 
+PROGRESS_PROMPT_TEMPLATE_12 = [
+    SEQUENCE_IMAGES_PLACEHOLDER,
+    f"""According to the attached images containing {IMAGE_COUNT_PLACEHOLDER} frames in order showing the robotic arm acting through a gripper end-effector, is the robot making correct progress towards the task "{TASK_NAME_PLACEHOLDER}"  or should it reset and try again from scratch (if it is completing a different task or acting erroneously) or is it unclear to you?
+    Looking at the scene, first think loudly about how the task could be achieved. Do not make any assumptions and focus on the task instruction and how it relates to everything in the scene.
+    Think loudly in detail about the needs of the task and the actions of the robot in each frame. Lastly, provide a conclusion based on the collective analysis of all frames saying "Reset" or "Keep Going" or "Unsure".
+    """
+    ]
+
+PROGRESS_PROMPT_TEMPLATE_13 = [
+    SEQUENCE_IMAGES_PLACEHOLDER,
+    f"""According to the attached images containing {IMAGE_COUNT_PLACEHOLDER} frames in order showing the robotic arm acting through a gripper end-effector, is the robot making correct progress towards the task "{TASK_NAME_PLACEHOLDER}"  or should it reset and try again from scratch (if it is completing a different task or acting erroneously) or is it unclear to you?
+    Looking at the scene, first think loudly about how the task could be achieved. Do not make any assumptions and focus on the task instruction and how it relates to everything in the scene.
+    Think loudly in detail about the needs of the task and the actions of the robot in each frame (think about each frame individually first and then later you can consider the difference between frames). Lastly, provide a conclusion based on the collective analysis of all frames saying "Reset" or "Keep Going" or "Unsure".
+    """
+    ]
+
+PROGRESS_PROMPT_TEMPLATE_14 = [
+    SEQUENCE_IMAGES_PLACEHOLDER,
+    f"""According to the attached images containing {IMAGE_COUNT_PLACEHOLDER} frames in order showing the robotic arm acting through a gripper end-effector, is the robot making correct progress towards the task "{TASK_NAME_PLACEHOLDER}"  or should it reset and try again from scratch (if it is completing an incorrect task or acting erroneously) or is it unclear to you?
+    Looking at the scene, first think loudly about what everything in the scene is and how it could be manipulated. Next, think how the task could be achieved. Then, think in detail about the needs of the task and the actions of the robot in each frame individually.
+    Lastly, provide a conclusion based on the collective analysis of all frames saying "Reset" or "Keep Going" or "Unsure".
+    Do not make any assumptions and focus on the task instruction and how it relates to everything in the scene.
+    """
+    ]
+
+PROGRESS_PROMPT_TEMPLATE_15 = [
+    SEQUENCE_IMAGES_PLACEHOLDER,
+    f"""According to the attached images containing {IMAGE_COUNT_PLACEHOLDER} frames in order showing the robotic arm acting through a gripper end-effector, is the robot making correct progress towards the task "{TASK_NAME_PLACEHOLDER}"  or should it reset and try again from scratch (if it is completing an incorrect task or acting erroneously) or is it unclear to you?
+    Looking at the scene, first think loudly about what everything in the scene is and how it could be manipulated. Next, think how the task could be achieved. Then, think in detail about the needs of the task and the actions of the robot in each frame individually. Lastly, provide a conclusion based on the collective analysis of all frames saying "Reset" or "Keep Going" or "Unsure".
+    Do not make any assumptions and focus on the task instruction and how it relates to everything in the scene.
+    
+    Please structure your answer to include the following sections:
+    * Scene Description and object affordances
+    * Task Description
+    * Detailed analysis of each frame
+    * Conclusion
+    """
+    ]
+
+PROGRESS_PROMPT_TEMPLATE_16 = [
+    SEQUENCE_IMAGES_PLACEHOLDER,
+    f"""According to the attached images containing {IMAGE_COUNT_PLACEHOLDER} frames in order showing the robotic arm acting through a gripper end-effector, is the robot making correct progress towards the task "{TASK_NAME_PLACEHOLDER}"  or should it reset and try again from scratch (if it is completing an incorrect task or acting erroneously) or is it unclear to you?
+    
+    Please only answer with "Keep Going", "Reset" or "Unsure".
+    """
+    ]
+
+
+PROGRESS_PROMPT_TEMPLATE_17 = [
+    SEQUENCE_IMAGES_PLACEHOLDER,
+    f"""According to the attached images containing {IMAGE_COUNT_PLACEHOLDER} frames in order showing the robotic arm acting through a gripper end-effector, is the robot making correct progress towards the task "{TASK_NAME_PLACEHOLDER}"  or should it reset and try again from scratch (if it is completing an incorrect task or acting erroneously) or is it unclear to you?
+    Looking at the scene, first think loudly about what everything in the scene is and how it could be manipulated. Next, think how the task could be achieved. Then, think in detail about the needs of the task and the actions of the robot in each frame individually. Then, find problems in your analysis so far. After that, write an improved analysis to address these problems. Lastly, provide a conclusion based on the collective analysis of all frames saying "Reset" or "Keep Going" or "Unsure".
+    Do not make any assumptions and focus on the task instruction and how it relates to everything in the scene.
+    
+    Please structure your answer to include the following sections:
+    * Scene Description and object affordances
+    * Task Description
+    * Detailed analysis of each frame
+    * Potential Problems in the current analysis
+    * Improved Analysis
+    * Conclusion
+    """
+    ]
 
 # success detection prompt
 SUCCESS_PROMPT_TEMPLATE_1 = [
@@ -116,11 +179,62 @@ SUCCESS_PROMPT_TEMPLATE_2 = [
 
 SUCCESS_PROMPT_TEMPLATE_3 = [
     SEQUENCE_IMAGES_PLACEHOLDER,
-    f"""According to the attached images containing {IMAGE_COUNT_PLACEHOLDER} frames in order showing the robotic arm acting through a gripper end-effector, has the robot succeeded or failed in completing the task {TASK_NAME_PLACEHOLDER}?
+    f"""According to the attached images containing {IMAGE_COUNT_PLACEHOLDER} frames in order showing the robotic arm acting through a gripper end-effector, has the robot succeeded or failed in completing the task "{TASK_NAME_PLACEHOLDER}"?
     
     Please start by thinking loudly in detail about the needs of the task and the actions of the robot in each frame. Lastly, provide a conclusion based on the collective analysis of all frames saying "Succeeded" or "Failed" .
     """
     ]
 
+SUCCESS_PROMPT_TEMPLATE_4 = [
+    SEQUENCE_IMAGES_PLACEHOLDER,
+    f"""According to the attached images containing {IMAGE_COUNT_PLACEHOLDER} frames in order showing the robotic arm acting through a gripper end-effector, has the robot succeeded or failed in completing the task "{TASK_NAME_PLACEHOLDER}"?
+    Looking at the scene, first think loudly about how the task could be achieved. Do not make any assumptions and focus on the task instruction and how it relates to everything in the scene.
+    Think loudly in detail about the needs of the task and the actions of the robot in each frame. Lastly, provide a conclusion based on the collective analysis of all frames saying "Succeeded" or "Failed" .
+    """
+    ]
 
+SUCCESS_PROMPT_TEMPLATE_5 = [
+    SEQUENCE_IMAGES_PLACEHOLDER,
+    f"""According to the attached images containing {IMAGE_COUNT_PLACEHOLDER} frames in order showing the robotic arm acting through a gripper end-effector, has the robot succeeded or failed in completing the task "{TASK_NAME_PLACEHOLDER}" or are you unsure?
+    Looking at the scene, first think loudly about what everything in the scene is and how it could be manipulated. Next, think how the task could be achieved. Then, think in detail about the needs of the task and the actions of the robot in each frame individually. Lastly, provide a conclusion based on the collective analysis of all frames saying "Succeeded" or "Failed" or "Unsure".
+    
+    Please structure your answer to include the following sections:
+    * Scene Description and object affordances
+    * Task Description
+    * Detailed analysis of each frame
+    * Conclusion
+    """
+    ]
+
+SUCCESS_PROMPT_TEMPLATE_6 = [
+    GRID_IMAGE_PLACEHOLDER,
+    f"""According to the image containing the frames in order from top to bottom and from left to right showing the robotic arm acting through a gripper end-effector, has the robot succeeded or failed in completing the task "{TASK_NAME_PLACEHOLDER}" or are you unsure?
+    Looking at the scene, first think loudly about what everything in the scene is and how it could be manipulated. Next, think how the task could be achieved. Then, think in detail about the needs of the task and the actions of the robot in each frame individually. Lastly, provide a conclusion based on the collective analysis of all frames saying "Succeeded" or "Failed" or "Unsure".
+    
+    Please structure your answer to include the following sections:
+    * Scene Description and object affordances
+    * Task Description
+    * Detailed analysis of each frame
+    * Conclusion
+    """
+    ]
+
+FEASIBILITY_PROMPT_TEMPLATE_1 = [
+    SEQUENCE_IMAGES_PLACEHOLDER,
+    f"""According to the attached image showing an environment with a robotic arm, is the task "{TASK_NAME_PLACEHOLDER}" considered feasible in this environment?
+    Looking at the scene, first think loudly about what everything in the scene is and how it could be manipulated. Next, think in detail about the needs of the task. Lastly, provide a conclusion based on the collective analysis of all frames saying "Feasible" or "Infeasible" or "Unsure".
+    
+    Please structure your answer to include the following sections:
+    * Scene Description and object affordances
+    * Task Description
+    * Conclusion
+    """
+]
+
+FEASIBILITY_PROMPT_TEMPLATE_2 = [
+    SEQUENCE_IMAGES_PLACEHOLDER,
+    f"""Attached is an image of an environment with a robotic arm, is the task "{TASK_NAME_PLACEHOLDER}" considered feasible in this environment?
+    Please analyze the scene and task and provide a conclusion saying "Feasible" or "Infeasible" or "Unsure".
+    """
+]
     # Do not make any assumptions and focus on the accuracy of the task instruction including the accuracy of colors.
